@@ -32,8 +32,9 @@ export default function MainPage({ columns, students, allSubjects, recentlyUpdat
             <div className="min-h-screen bg-gray-100 text-gray-900 py-6">
                 <main className="mx-auto px-4 sm:px-6 lg:px-32 pt-4">
                     <div className="flex justify-between">
-                        <h1 className="text-xl font-semibold">
-                            Student Management System
+                        <h1 className="text-3xl font-bold flex tracking-wide pb-6">
+                            <img src='/public/brand-logo.png' className='w-20 h-20 mr-3'/>
+                            Student Management <br/> System
                         </h1>
                         <button
                             type='button'
@@ -41,7 +42,7 @@ export default function MainPage({ columns, students, allSubjects, recentlyUpdat
                                 setPopupStudentFormStudent(null)
                                 setPopupStudentFormOpen(true)
                             }}
-                            className='btn-primary'
+                            className='btn-primary mb-20'
                         >
                             Add new student
                         </button>
