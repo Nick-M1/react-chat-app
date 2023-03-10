@@ -1,9 +1,10 @@
 import "@fontsource/montserrat";
 import React, { useEffect, useState} from 'react'
-import getAllStudents from "../utils/DB/getAllStudents";
+import getAllStudents from "./utils/DB/getAllStudents";
 import MainPage from "./components/MainPage";
 import {Column} from "react-table";
 import {Toaster} from "react-hot-toast";
+import getAllSubjects from "./utils/DB/getAllSubjects";
 
 // const getData = () => [
 //     {
@@ -85,32 +86,42 @@ const columns: StudentColumn[] = [
         header: "DOB (age)",
         accessor: "dob",
     },
+    {
+        header: "Subjects",
+        accessor: "subject",
+    },
 ]
 
 
 export default function App() {
     // From DB
     const [students, setStudents] = useState([] as Student[])
+    const [allSubjects, setAllSubjects] = useState([] as string[])
 
     // Querying for DB
     const [sortingAsc, setSortingAsc] = useState(true)
     const [sortingOrderby, setSortingOrderby] = useState('id')
     const [sortingTextsearch, setSortingTextsearch] = useState('')
+    const [selectedSubjects, setSelectedSubjects] = useState([] as string[])
 
     // For updates from client to db
     const [recentlyUpdatedStudent, setRecentlyUpdatedStudent] = useState<number | null>(null)
 
+    useEffect(() => getAllSubjects(setAllSubjects), [recentlyUpdatedStudent])
+    useEffect(() => setSelectedSubjects(allSubjects), [allSubjects])
+
     useEffect(() => {
-        getAllStudents(setStudents, sortingAsc, sortingOrderby, sortingTextsearch)
+        getAllStudents(setStudents, sortingAsc, sortingOrderby, sortingTextsearch, selectedSubjects)
         setTimeout(() => setRecentlyUpdatedStudent(null), 400)
-    }, [recentlyUpdatedStudent, sortingAsc, sortingOrderby, sortingTextsearch])
+    }, [recentlyUpdatedStudent, sortingAsc, sortingOrderby, sortingTextsearch, selectedSubjects])
 
     return (
-        <div className="font-montserrat">
+        <div className="font-montserrat scrollbar">
             <Toaster/>
             <MainPage
                 columns={columns}
                 students={students}
+                allSubjects={allSubjects}
                 recentlyUpdatedStudent={recentlyUpdatedStudent}
                 setRecentlyUpdatedStudent={setRecentlyUpdatedStudent}
 
@@ -120,6 +131,8 @@ export default function App() {
                 setSortingOrderby={setSortingOrderby}
                 sortingTextsearch={sortingTextsearch}
                 setSortingTextsearch={setSortingTextsearch}
+                selectedSubjects={selectedSubjects}
+                setSelectedSubjects={setSelectedSubjects}
             />
         </div>
     )

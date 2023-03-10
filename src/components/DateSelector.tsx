@@ -11,12 +11,13 @@ export default function Example({ studentDob, setStudentDob }: Props) {
 
     return (
         <DatePicker
-            className='mt-1 block w-full input-primary'
+            className='mt-1 block w-full input-primary z-50'
             selected={studentDob}
             onChange={(date) => {
                 if (date != null) setStudentDob(date)
             }}
             dateFormat='yyyy-MM-dd'
+            maxDate={new Date}
         />
     );
 };

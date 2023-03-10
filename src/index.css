@@ -22,3 +22,29 @@
         @apply rounded-lg drop-shadow-md
     }
 }
+
+@layer utilities {
+    .scrollbar::-webkit-scrollbar {
+        width: 12px;
+        height: 12px;
+    }
+
+    .scrollbar::-webkit-scrollbar-track {
+        border-radius: 30vh;
+        background: #4f536e2b;
+    }
+
+    .scrollbar::-webkit-scrollbar-thumb {
+        background: #b9bacd9b;
+        border-radius: 100vh;
+        border: 3px solid #f6f7edc3;
+    }
+
+    .scrollbar::-webkit-scrollbar-thumb:hover {
+        background: #27222c3e;
+    }
+}
+
+.react-datepicker-popper {
+    z-index: 9999 !important;
+}

@@ -19,7 +19,7 @@
   "include": [
     "src",
     "typings.d.ts",
-    "utils/"
+    "src/utils/"
   ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

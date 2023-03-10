@@ -2,8 +2,23 @@ import {Dispatch, SetStateAction, useState} from "react";
 import PopupCustom from "./popups/PopupCustom";
 import {ExclamationTriangleIcon} from "@heroicons/react/24/outline";
 import toast from "react-hot-toast";
-import {toastOptionsCustom} from "../../utils/toast-options-custom";
+import {toastOptionsCustom} from "../utils/toast-options-custom";
 import {ChevronDownIcon, ChevronUpIcon} from "@heroicons/react/24/solid";
+import subjectToColour from "../utils/subject-to-colour";
+import {capitalise} from "../utils/textUtils";
+
+
+function SortUpIcon({ className }: { className: string }) {
+    return (
+        <svg className={className} stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 320 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M279 224H41c-21.4 0-32.1-25.9-17-41L143 64c9.4-9.4 24.6-9.4 33.9 0l119 119c15.2 15.1 4.5 41-16.9 41z"></path></svg>
+    )
+}
+
+function SortDownIcon({ className }: { className: string }) {
+    return (
+        <svg className={className} stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 320 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M41 288h238c21.4 0 32.1 25.9 17 41L177 448c-9.4 9.4-24.6 9.4-33.9 0L24 329c-15.1-15.1-4.4-41 17-41z"></path></svg>
+    )
+}
 
 type Props = {
     columns: StudentColumn[]
@@ -78,8 +93,8 @@ export default function Table({ columns, students, recentlyUpdatedStudent, setPo
                                         { column.header }
 
                                         <div className='ml-2'>
-                                            <ChevronUpIcon    className={`w-3 h-3 -mb-1 ${column.accessor == sortingOrderby && !sortingAsc && 'opacity-0' }`}/>
-                                            <ChevronDownIcon  className={`w-3 h-3 ${column.accessor == sortingOrderby && sortingAsc && 'opacity-0' }`}/>
+                                            <SortUpIcon className={`w-3.5 h-3.5 -mb-3 ${column.accessor == sortingOrderby && !sortingAsc && 'opacity-0' }`}/>
+                                            <SortDownIcon className={`w-3.5 h-3.5 ${column.accessor == sortingOrderby && sortingAsc && 'opacity-0' }`}/>
                                         </div>
                                     </div>
                                 </th>
@@ -99,14 +114,18 @@ export default function Table({ columns, students, recentlyUpdatedStudent, setPo
                                 <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                     {student.id}
                                 </th>
-                                <td className="px-6 py-4">
+                                <td className="flex px-6 py-4 items-center">
+                                    <img src={student.image} alt='student profile' className='w-10 h-10 rounded-full shadow-sm mr-3' />
                                     {student.name}
                                 </td>
                                 <td className="px-6 py-4">
                                     {student.email}
                                 </td>
                                 <td className="px-6 py-4">
-                                    {student.dob} ({student.age})
+                                    {student.dob}
+                                </td>
+                                <td className="px-6 py-4">
+                                    { student.subjects.map(subject => <span className={` px-2 py-1 mr-1 -mt-3 rounded-md ${subjectToColour(subject)}`}>{capitalise(subject)}</span>) }
                                 </td>
                                 <td className="px-6 py-4 text-right">
                                     <button

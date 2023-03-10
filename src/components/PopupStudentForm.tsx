@@ -1,9 +1,11 @@
 import {Dialog, Transition} from "@headlessui/react";
 import React, {Dispatch, Fragment, SetStateAction, useEffect, useState} from "react";
 import DateSelector from "./DateSelector";
-import dateFormatter from "../../utils/time-formatter";
+import dateFormatter from "../utils/time-formatter";
 import toast from "react-hot-toast";
-import {toastOptionsCustom} from "../../utils/toast-options-custom";
+import {toastOptionsCustom} from "../utils/toast-options-custom";
+import SubjectSelector from "./filters/SubjectSelector";
+import getAllPossibleSubjects from "../utils/DB/getAllPossibleSubjects";
 
 type Props = {
     open: boolean
@@ -15,12 +17,17 @@ type Props = {
     setRecentlyUpdatedStudent: Dispatch<SetStateAction<number | null>>
 }
 
+const DEFAULT_PROFILE_IMAGE = 'https://res.cloudinary.com/dmtc1wlgq/image/upload/v1641911896/media/avatar/default_zrdbiq.png'
+
 export default function PopupStudentForm({ open, setOpen, studentToEdit, setPopupStudentFormStudent, setRecentlyUpdatedStudent }: Props) {
     const isEdit = studentToEdit != null
 
     const [studentName, setStudentName] = useState('')
     const [studentEmail, setStudentEmail] = useState( '')
     const [studentDob, setStudentDob] = useState<Date>(new Date())
+    // const [studentYear, setStudentYear] = useState( getAllPossibleYears()[0])
+    const [studentSubjects, setStudentSubjects] = useState( [] as string[])
+    const [studentImage, setStudentImage] = useState( '')
 
     // Set or reset state, based on what 'studentToEdit' is
     useEffect(() => {
@@ -28,21 +35,30 @@ export default function PopupStudentForm({ open, setOpen, studentToEdit, setPopu
             setStudentName(studentToEdit.name)
             setStudentEmail(studentToEdit.email)
             setStudentDob(new Date(studentToEdit.dob))
+            // setStudentYear(studentToEdit.year)
+            setStudentSubjects(studentToEdit.subjects)
+            setStudentImage(studentToEdit.image)
         } else {
             setStudentName('')
             setStudentEmail('')
             setStudentDob(new Date())
+            // setStudentYear(getAllPossibleYears()[0])
+            setStudentSubjects([] as string[])
+            setStudentImage('')
         }
     }, [studentToEdit])
 
 
     // POST - Add new student to DB
     const postStudent = async () => {
-        const studentRequest = {
+        const studentRequest: StudentRequest = {
             name: studentName,
             email: studentEmail,
-            dob: dateFormatter(studentDob)
-        } as StudentRequest
+            image: studentImage == '' ? DEFAULT_PROFILE_IMAGE : studentImage,
+            // year: studentYear,
+            dob: dateFormatter(studentDob),
+            subjects: studentSubjects
+        }
 
         return fetch(
             'http://localhost:8080/api/v1/student',
@@ -59,12 +75,18 @@ export default function PopupStudentForm({ open, setOpen, studentToEdit, setPopu
 
     // PUT - Update info of an already existing student in DB
     const putStudent = async () => {
+        const urlSearchParams = new URLSearchParams({
+            name: studentName,
+            email: studentEmail,
+            image: studentImage == '' ? DEFAULT_PROFILE_IMAGE : studentImage,
+            // year: studentYear,
+            dob: dateFormatter(studentDob),
+        });
+
+        studentSubjects.forEach(subject => urlSearchParams.append('subjects', subject))
+
         return fetch(
-            `http://localhost:8080/api/v1/student/${studentToEdit?.id}?${new URLSearchParams({
-                name: studentName,
-                email: studentEmail,
-                dob: dateFormatter(studentDob)
-            })}`,
+            `http://localhost:8080/api/v1/student/${studentToEdit?.id}?${urlSearchParams}`,
             {
                 method: 'PUT',
                 headers: {
@@ -86,7 +108,7 @@ export default function PopupStudentForm({ open, setOpen, studentToEdit, setPopu
         const response = isEdit ? await putStudent() : await postStudent()
         const responseJson = await response.json()
 
-        if (!response.ok) {             //todo React toast
+        if (!response.ok) {
             console.log(responseJson)
             toast.error('Upload failed', { id: 'post/put student' })
             return
@@ -102,6 +124,10 @@ export default function PopupStudentForm({ open, setOpen, studentToEdit, setPopu
         setTimeout(() => {
             setStudentName('')
             setStudentEmail('')
+            setStudentDob(new Date())
+            // setStudentYear(getAllPossibleYears()[0])
+            setStudentSubjects([] as string[])
+            setStudentImage('')
         }, 200)
     }
 
@@ -138,10 +164,10 @@ export default function PopupStudentForm({ open, setOpen, studentToEdit, setPopu
                                 >
                                     {isEdit ? 'Edit' : 'Add new'} student 👨🏻‍🎓
                                 </Dialog.Title>
-                                <section className='space-y-6 py-2'>
-                                    <div className="mt-2">
+                                <section className='space-y-5 py-4'>
+                                    <div className="">
                                         <div>
-                                            <h1 className={`leading-6 font-medium ${true ? 'text-gray-900' : 'text-red-700 dark:text-red-500' }`}>
+                                            <h1 className='leading-6 font-medium text-gray-900'>
                                                 Student's Name
                                             </h1>
                                             <input
@@ -155,7 +181,7 @@ export default function PopupStudentForm({ open, setOpen, studentToEdit, setPopu
                                             />
                                         </div>
                                     </div>
-                                    <div className="mt-2">
+                                    <div className="">
                                         <div>
                                             <h1 className='leading-6 font-medium text-gray-900'>
                                                 Student's Email Address
@@ -171,12 +197,38 @@ export default function PopupStudentForm({ open, setOpen, studentToEdit, setPopu
                                             />
                                         </div>
                                     </div>
-                                    <div className="mt-2">
+                                    {/*<div className=''>*/}
+                                    {/*    <h1 className='leading-6 font-medium text-gray-900 mb-0.5'>*/}
+                                    {/*        Student's Year Group*/}
+                                    {/*    </h1>*/}
+                                    {/*    <LabelSelectorSingle allPossibleLabels={getAllPossibleYears()} selectedLabel={studentYear} setSelectedLabel={setStudentYear}/>*/}
+                                    {/*</div>*/}
+                                    <div className=''>
+                                        <h1 className='leading-6 font-medium text-gray-900 mb-0.5'>
+                                            Student's Subjects
+                                        </h1>
+                                        <SubjectSelector allPossibleLabels={getAllPossibleSubjects()} selectedLabels={studentSubjects} setSelectedLabels={setStudentSubjects}/>
+                                    </div>
+                                    <div className="">
+                                        <h1 className='leading-6 font-medium text-gray-900'>
+                                            Student's Date of Birth
+                                        </h1>
+                                        <DateSelector studentDob={studentDob} setStudentDob={setStudentDob}/>
+                                    </div>
+                                    <div className="">
                                         <div>
-                                            <h1 className={`leading-6 font-medium ${true ? 'text-gray-900' : 'text-red-700 dark:text-red-500' }`}>
-                                                Student's Date of Birth
+                                            <h1 className='leading-6 font-medium text-gray-900'>
+                                                Student's Profile Image url
                                             </h1>
-                                            <DateSelector studentDob={studentDob} setStudentDob={setStudentDob}/>
+                                            <input
+                                                type="text"
+                                                name="title"
+                                                id="title"
+                                                className={`mt-1 block w-full input-primary ${true ? '' : 'input-secondary-invalid' }`}
+                                                placeholder="www.example.com/image.png (optional)"
+                                                value={studentImage}
+                                                onChange={(e) => setStudentImage(e.target.value)}
+                                            />
                                         </div>
                                     </div>
                                 </section>
