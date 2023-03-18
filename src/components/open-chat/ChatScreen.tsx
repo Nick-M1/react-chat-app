@@ -7,27 +7,13 @@ import {db} from "../../firebase";
 
 type Props = {
     user: User
+    selectedRoomId: string
 }
 
-export default function ChatScreen({ user }: Props) {
-    //
-    const [selectedChatroomId, setSelectedChatroomId] = useState<string>('')
-    const [chatroom, setChatroom] = useState<ChatRoom | null>(null)
-
-    const chatroomUnsub = onSnapshot(
-        doc(db, "rooms", selectedChatroomId, "messages"),
-        (doc) => {
-            setChatroom(doc.data() as ChatRoom)
-    });
-    useEffect(() => { return () => chatroomUnsub() }, [])
-
-//
-
-
-
+export default function ChatScreen({ user, selectedRoomId }: Props) {
 
     const [messages, setMessages] = useState<Message[]>([])
-    const messagesUnsub = onSnapshot(collection(db, "rooms", "1lTRvv37HHKpE0iarqOI", "messages"), (doc) => {
+    const messagesUnsub = onSnapshot(collection(db, "rooms", selectedRoomId, "messages"), (doc) => {
         setMessages(doc.docs.map(dc => dc.data() as Message))
     });
     useEffect(() => { return () => messagesUnsub() }, [])
@@ -35,7 +21,7 @@ export default function ChatScreen({ user }: Props) {
     return (
         <div>
             {messages && messages.map(msg => <MessageSingle key={msg.id} message={msg} user={user} />)}
-            <NewMessage user={user} />
+            <NewMessage user={user} selectedRoomId={selectedRoomId} />
         </div>
     )
     // return (

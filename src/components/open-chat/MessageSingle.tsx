@@ -11,7 +11,7 @@ type Props = {
 }
 
 export default function MessageSingle({ message, user }: Props) {
-    const isSender = user?.uid == message.userId
+    const isSender = user?.uid == message.user.id
 
     const [modal, setModal] = useState(false)
     const openModal = () => setModal(true)

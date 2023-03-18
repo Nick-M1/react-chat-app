@@ -1,22 +1,59 @@
 import {Dialog, Transition} from "@headlessui/react";
-import {Fragment, useState} from "react";
+import {Dispatch, Fragment, SetStateAction, useEffect, useState} from "react";
 import {MagnifyingGlassIcon} from "@heroicons/react/24/outline";
 import {User} from "firebase/auth";
 import SignoutButton from "../authentication/SignoutButton";
+import {arrayUnion, collection, doc, onSnapshot, query, setDoc, updateDoc, where} from "firebase/firestore";
+import {db} from "../../firebase";
+import ChatroomSingle from "./ChatroomSingle";
+import {v4 as uuidv4} from "uuid";
 
 type Props = {
     user: User
+    setSelectedChatroomId: Dispatch<SetStateAction<string>>
 }
 
-export default function Sidebar({ user }: Props) {
+export default function Sidebar({ user, setSelectedChatroomId }: Props) {
     const [newChatPopup, setNewChatPopup] = useState(false)
     const openNewChatPopup = () => setNewChatPopup(true)
     const closeNewChatPopup = () => setNewChatPopup(false)
 
+    const userQuery = {
+        id: user.uid,
+    } as UserType
+
+    const [allChatrooms, setAllChatrooms] = useState<ChatRoom[]>([])
+    const chatroomUnsub = onSnapshot(
+        query(
+            collection(db, "rooms"),
+            where('userIds', 'array-contains', user?.uid)
+        ),
+        (docs) => {
+            setAllChatrooms(docs.docs.map(d => d.data() as ChatRoom))
+        });
+    useEffect(() => { return () => chatroomUnsub() }, [])
+
+
+
+    const newChatHandler = async () => {
+        const newRoomId = uuidv4()
+
+        const roomsRef = doc(db, "rooms", newRoomId)
+        await setDoc(roomsRef, {
+            id: newRoomId,
+            userIds: [user.uid],
+            users: [{
+                id: user.uid,
+                displayname: user.displayName,
+                image: user.photoURL
+            }] as UserType[]
+        } as ChatRoom);
+
+        setSelectedChatroomId(newRoomId)
+    }
+
     return (
         <div className="flex w-[30vw]">
-            {/*<ThemeToggler />*/}
-
             <div className="max-h-screen bg-blue-400 dark:bg-white/[8%] backdrop-blur-lg w-[400px] min-h-screen text-black dark:text-white">
                 <SignoutButton/>
 
@@ -50,9 +87,9 @@ export default function Sidebar({ user }: Props) {
                         </p>
                     </div>
                     <div className="w-full max-h-[48vh] overflow-y-scroll hidescrollbar">
-                        {/*{chatsSnapshot?.docs.map((chat: ChatType) => (*/}
-                        {/*    <Chat key={chat.id} id={chat.id} users={chat.data().users} />*/}
-                        {/*))}*/}
+                        {allChatrooms.map((chat) => (
+                            <ChatroomSingle key={chat.id} chatroom={chat} setSelectedChatroomId={setSelectedChatroomId} />
+                        ))}
                     </div>
                 </div>
 
@@ -161,9 +198,12 @@ export default function Sidebar({ user }: Props) {
                                     <button
                                         type="button"
                                         className="inline-flex justify-center px-4 py-2 text-sm font-medium text-blue-900 bg-blue-100 border border-transparent rounded-xl hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500"
-                                        onClick={closeNewChatPopup}
+                                        onClick={() => {
+                                            newChatHandler()
+                                            closeNewChatPopup()
+                                        }}
                                     >
-                                        I will chat later!
+                                        Start new chat!
                                     </button>
                                 </div>
                             </div>

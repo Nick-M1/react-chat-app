@@ -3,13 +3,17 @@ type Message = {
     createdAt: number
     text: string
 
-    userId: string
-    userDisplayname: string
-    userImage: string
+    user: UserType
 }
 
 type ChatRoom = {
     id: string
-    users: string[]
-    messages: Message[]
+    userIds: string[]
+    users: UserType[]
+}
+
+type UserType = {
+    id: string
+    displayname: string
+    image: string
 }

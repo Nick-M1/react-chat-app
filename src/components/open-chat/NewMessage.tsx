@@ -7,9 +7,10 @@ import { v4 as uuidv4 } from 'uuid';
 
 type Props = {
     user: User
+    selectedRoomId: string
 }
 
-export default function NewMessage({ user }: Props) {
+export default function NewMessage({ user, selectedRoomId }: Props) {
     const [formValue, setFormValue] = useState('')
 
     const sendMessageHander = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -20,14 +21,16 @@ export default function NewMessage({ user }: Props) {
 
         const newMessageId = uuidv4()
 
-        await setDoc(doc(db, "rooms", "1lTRvv37HHKpE0iarqOI", "messages", newMessageId), {
+        await setDoc(doc(db, "rooms", selectedRoomId, "messages", newMessageId), {
             id: newMessageId,
             createdAt: Date.now(),
             text: formValue,
 
-            userId: user.uid,
-            userDisplayname: user.displayName,
-            userImage: user.photoURL
+            user: {
+                id: user.uid,
+                displayname: user.displayName,
+                image: user.photoURL
+            } as UserType
         } as Message);
 
         setFormValue('')
@@ -37,7 +40,7 @@ export default function NewMessage({ user }: Props) {
     return (
         <div>
             <form onSubmit={sendMessageHander}>
-                <input value={formValue} onChange={(e) => setFormValue(e.target.value)}/>
+                <input value={formValue} onChange={(e) => setFormValue(e.target.value)} className='bg-gray-500'/>
                 <button type='submit'>Send</button>
             </form>
 
