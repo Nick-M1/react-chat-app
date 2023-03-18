@@ -3,10 +3,11 @@ import {Dispatch, Fragment, SetStateAction, useEffect, useState} from "react";
 import {MagnifyingGlassIcon} from "@heroicons/react/24/outline";
 import {User} from "firebase/auth";
 import SignoutButton from "../authentication/SignoutButton";
-import {arrayUnion, collection, doc, onSnapshot, query, setDoc, updateDoc, where} from "firebase/firestore";
+import {arrayUnion, collection, doc, getDocs, onSnapshot, query, setDoc, updateDoc, where} from "firebase/firestore";
 import {db} from "../../firebase";
 import ChatroomSingle from "./ChatroomSingle";
 import {v4 as uuidv4} from "uuid";
+import AutocompleteSelector from "./AutocompleteSelector";
 
 type Props = {
     user: User
@@ -14,13 +15,31 @@ type Props = {
 }
 
 export default function Sidebar({ user, setSelectedChatroomId }: Props) {
+    const [newChatFormvalue, setNewChatFormvalue] = useState('')
+    const [newChatAutocomplete, setNewChatAutocomplete] = useState<UserType[]>([])
+    useEffect(() => {
+        if (newChatFormvalue.length > 3) {
+            getDocs(
+                query(
+                    collection(db, 'users'),
+                    where('email', '>=', newChatFormvalue),
+                    where('email', '<=', newChatFormvalue + '\uf8ff'),
+                    where('email', '!=', user.email)
+                )
+            ).then(r => setNewChatAutocomplete(r.docs.map(d => d.data() as UserType)))
+
+        } else
+            setNewChatAutocomplete( selectedUsers)
+    }, [newChatFormvalue])
+
+    const [selectedUsers, setSelectedUsers] = useState<UserType[]>([])
     const [newChatPopup, setNewChatPopup] = useState(false)
     const openNewChatPopup = () => setNewChatPopup(true)
-    const closeNewChatPopup = () => setNewChatPopup(false)
+    const closeNewChatPopup = () => {
+        setSelectedUsers([])
+        setNewChatPopup(false)
+    }
 
-    const userQuery = {
-        id: user.uid,
-    } as UserType
 
     const [allChatrooms, setAllChatrooms] = useState<ChatRoom[]>([])
     const chatroomUnsub = onSnapshot(
@@ -41,12 +60,13 @@ export default function Sidebar({ user, setSelectedChatroomId }: Props) {
         const roomsRef = doc(db, "rooms", newRoomId)
         await setDoc(roomsRef, {
             id: newRoomId,
-            userIds: [user.uid],
-            users: [{
+            userIds: [...selectedUsers.map(u => u.id), user.uid],
+            users: [ ...selectedUsers, {
                 id: user.uid,
                 displayname: user.displayName,
+                email: user.email,
                 image: user.photoURL
-            }] as UserType[]
+            } as UserType ]
         } as ChatRoom);
 
         setSelectedChatroomId(newRoomId)
@@ -111,6 +131,7 @@ export default function Sidebar({ user, setSelectedChatroomId }: Props) {
                 </div>
             </div>
 
+            {/* Create new chat popup */}
             <Transition appear show={newChatPopup} as={Fragment}>
                 <Dialog
                     as="div"
@@ -145,66 +166,33 @@ export default function Sidebar({ user, setSelectedChatroomId }: Props) {
                             leaveFrom="opacity-100 scale-100"
                             leaveTo="opacity-0 scale-95"
                         >
-                            <div className="inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-blue-800 shadow-xl rounded-xl">
+                            <div className="inline-block w-full max-w-xl py-6 px-8 my-8 text-left align-middle transition-all transform bg-blue-700 shadow-xl rounded-xl">
                                 <Dialog.Title
                                     as="h3"
-                                    className="text-lg font-semibold leading-6 text-black dark:text-white"
+                                    className="pb-3 text-lg font-semibold leading-6 text-black dark:text-white"
                                 >
                                     Start a chat with others
                                 </Dialog.Title>
-                                <input
-                                    // ref={inputFocusRef}
-                                    className="w-full p-4 mt-3 text-black dark:text-white placeholder-gray-300 rounded-md shadow-md outline-none bg-white/10 backdrop-blur-lg focus-visible:ring-blue-500"
-                                    placeholder="Search for someone"
-                                    // value={inputValue}
-                                    // onChange={onChange}
-                                />
 
-                                <div className="h-full mt-2 overflow-y-scroll max-h-[500px] pr-2 pt-5">
-                                    {/*{filteredSuggestions.map(*/}
-                                    {/*    ({ id, data: { name, email, photoURL } }) => (*/}
-                                    {/*        <div*/}
-                                    {/*            key={id}*/}
-                                    {/*            className="rounded-lg bg-white/10 backdrop-blur-lg"*/}
-                                    {/*            onClick={() => {*/}
-                                    {/*                createChat(email);*/}
-                                    {/*                toast.success("Chat created successfully");*/}
-                                    {/*            }}*/}
-                                    {/*        >*/}
-                                    {/*            {email === user?.primaryEmailAddress?.emailAddress ? (*/}
-                                    {/*                <div></div>*/}
-                                    {/*            ) : (*/}
-                                    {/*                <div className="flex items-center p-4 my-1 text-black dark:text-white break-words cursor-pointer rounded-xl">*/}
-                                    {/*                    {photoURL && (*/}
-                                    {/*                        <img*/}
-                                    {/*                            width={56}*/}
-                                    {/*                            height={56}*/}
-                                    {/*                            src={photoURL}*/}
-                                    {/*                            alt={name}*/}
-                                    {/*                            className="rounded-full cursor-pointer hover:opacity-80"*/}
-                                    {/*                        />*/}
-                                    {/*                    )}*/}
-                                    {/*                    <div className="flex flex-col ml-3 break-words cursor-pointer">*/}
-                                    {/*                        <p>{name}</p>*/}
-                                    {/*                    </div>*/}
-                                    {/*                </div>*/}
-                                    {/*            )}*/}
-                                    {/*        </div>*/}
-                                    {/*    )*/}
-                                    {/*)}*/}
-                                </div>
+                                <div className='flex space-x-4'>
+                                    <AutocompleteSelector
+                                        selectedUsers={selectedUsers} setSelectedUsers={setSelectedUsers}
+                                        newChatFormvalue={newChatFormvalue} setNewChatFormvalue={setNewChatFormvalue}
+                                        newChatAutocomplete={newChatAutocomplete}
+                                    />
 
-                                <div className="mt-4">
-                                    <button
-                                        type="button"
-                                        className="inline-flex justify-center px-4 py-2 text-sm font-medium text-blue-900 bg-blue-100 border border-transparent rounded-xl hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500"
-                                        onClick={() => {
-                                            newChatHandler()
-                                            closeNewChatPopup()
-                                        }}
-                                    >
-                                        Start new chat!
-                                    </button>
+                                    <div className="">
+                                        <button
+                                            type="button"
+                                            className="inline-flex min-w-[135px] justify-center py-3 text-sm font-medium text-blue-900 bg-blue-100 border border-transparent rounded-xl hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500"
+                                            onClick={() => {
+                                                newChatHandler()
+                                                closeNewChatPopup()
+                                            }}
+                                        >
+                                            Start new chat!
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </Transition.Child>

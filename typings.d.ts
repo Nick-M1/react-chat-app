@@ -15,5 +15,6 @@ type ChatRoom = {
 type UserType = {
     id: string
     displayname: string
+    email: string
     image: string
 }

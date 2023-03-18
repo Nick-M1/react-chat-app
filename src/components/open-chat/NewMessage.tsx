@@ -29,6 +29,7 @@ export default function NewMessage({ user, selectedRoomId }: Props) {
             user: {
                 id: user.uid,
                 displayname: user.displayName,
+                email: user.email,
                 image: user.photoURL
             } as UserType
         } as Message);

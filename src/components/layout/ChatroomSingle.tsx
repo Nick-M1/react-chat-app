@@ -22,10 +22,6 @@ export default function ChatroomSingle({ chatroom, setSelectedChatroomId }: Prop
                 src={chatroom.users[0].image}
                 alt='profile pic'
             />
-            <p className="z-0 flex items-center justify-center text-xl text-center text-black capitalize bg-gray-300 rounded-full w-14 h-14">
-                { chatroom.users[0].displayname }
-            </p>
-
             <div className="ml-5">
                 <p className="">{ chatroom.users[0].displayname }</p>
             </div>

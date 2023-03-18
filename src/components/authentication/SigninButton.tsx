@@ -1,34 +1,26 @@
 import React from 'react';
-import {auth, googleProvider} from "../../firebase";
+import {auth, db, googleProvider} from "../../firebase";
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import {doc, setDoc} from "firebase/firestore";
 
 
 
 export default function SigninButton() {
     const signInWithGoogle = () => {
         signInWithPopup(auth, googleProvider)
-            .then((result) => {
-                // // This gives you a Google Access Token. You can use it to access the Google API.
-                // const credential = GoogleAuthProvider.credentialFromResult(result);
-                // const token = credential?.accessToken;
-                // The signed-in user info.
+            .then(async (result) => {
                 const user = result.user;
-                // IdP data available using getAdditionalUserInfo(result)
-                // ...
-            }).catch((error) => {
-            // // Handle Errors here.
-            // const errorCode = error.code;
-            // const errorMessage = error.message;
-            // // The email of the user's account used.
-            // const email = error.customData.email;
-            // // The AuthCredential type that was used.
-            // const credential = GoogleAuthProvider.credentialFromError(error);
-            // // ...
-        });
+                await setDoc(doc(db, "users", user.uid), {
+                    id: user.uid,
+                    displayname: user.displayName,
+                    email: user.email,
+                    image: user.photoURL
+                } as UserType);
+            });
     }
 
     return (
-        <button onClick={signInWithGoogle}>
+        <button onClick={signInWithGoogle} className='btn-primary'>
             Sign in with Google
         </button>
     );

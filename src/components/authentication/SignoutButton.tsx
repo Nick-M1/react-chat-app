@@ -4,7 +4,7 @@ import { signOut } from "firebase/auth";
 
 
 export default function SignoutButton() {
-    const signOutHander = () => {
+    const signOutHandler = () => {
         signOut(auth).then(() => {
             // Sign-out successful.
         }).catch((error) => {
@@ -13,7 +13,7 @@ export default function SignoutButton() {
     }
 
     return (
-        <button onClick={signOutHander} className=''>
+        <button onClick={signOutHandler} className='btn-primary'>
             Sign out
         </button>
     );
