@@ -1,24 +1,15 @@
-type Student = {
-    id: number,
-    name: string,
-    email: string,
-    image: string,
-    dob: string,
-    age: number
-    subjects: string[]
-    // year: string
-};
+type Message = {
+    id: string
+    createdAt: number
+    text: string
 
-type StudentRequest = {
-    name: string,
-    email: string,
-    image: string,
-    dob: string,
-    subjects: string[]
-    // year: string
-};
+    userId: string
+    userDisplayname: string
+    userImage: string
+}
 
-type StudentColumn = {
-    header: string
-    accessor: string
-};
+type ChatRoom = {
+    id: string
+    users: string[]
+    messages: Message[]
+}
