@@ -17,7 +17,7 @@ export default function ChatroomSingle({ chatroom, selectedChatroomId, setSelect
             setSelectedChatroomId(chatroom.id)
     }
     useEffect(() => {
-        setTimeout(() => smoothScroll('end-of-messages', 'center', false), 7)
+        setTimeout(() => smoothScroll('end-of-messages', 'center', false), 11)
     }, [selectedChatroomId])
 
     return (
