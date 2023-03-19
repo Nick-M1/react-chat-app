@@ -19,10 +19,10 @@ export default function MessageSingle({ message, user }: Props) {
     const closeModal = () => setModal(false)
 
     return (
-        <div className="min-w-[80px]" id={message.id}>
+        <div className="w-full md:min-w-[80px] md:pr-3" id={message.id}>
             <div
                 style={{ width: "fit-content" }}
-                className={`p-4 rounded-lg m-3 min-w-[80px] pb-7 relative text-center break-all text-white ${
+                className={`p-4 rounded-lg m-3 md:min-w-[80px] pb-7 relative text-center break-all text-white ${
                         isSender
                         ? "ml-auto bg-indigo-900 text-left"
                         : "bg-blue-900 text-left"

@@ -8,30 +8,36 @@ import smoothScroll from "../../utils/smooth-scroll";
 
 type Props = {
     user: User
-    selectedRoomId: string
+    selectedChatroomId: string
 }
 
-export default function ChatScreen({ user, selectedRoomId }: Props) {
+export default function ChatScreen({ user, selectedChatroomId }: Props) {
+    const [previousChatroomId, setPreviousChatroomId] = useState<string>('')
 
     const [messages, setMessages] = useState<Message[]>([])
     const messagesUnsub = onSnapshot(
         query(
-            collection(db, "rooms", selectedRoomId, "messages"),
+            collection(db, "rooms", selectedChatroomId, "messages"),
             orderBy('timestamp', 'asc')
         ),
         (doc) => {
-        setMessages(doc.docs.map(dc => dc.data() as Message))
+            setMessages(doc.docs.map(dc => dc.data() as Message))
+
+            if (previousChatroomId != selectedChatroomId) {
+                setTimeout(() => smoothScroll('end-of-messages', 'center', false), 0.5)
+                setTimeout(() => smoothScroll('end-of-messages', 'center', false), 8)
+                setPreviousChatroomId(selectedChatroomId)
+            }
     });
     useEffect(() => { return () => messagesUnsub() }, [])
 
     return (
         <div className=''>
-            <button onClick={() => smoothScroll('end-of-messages', 'center', true)}>HHHHHHHHH</button>
-            <div className=' h-[90vh] px-3 overflow-y-scroll scrollbar'>
+            <div className='w-full h-[90vh] px-0.5 md:px-3 overflow-y-scroll scrollbar'>
                 {messages && messages.map(msg => <MessageSingle key={msg.id} message={msg} user={user} />)}
                 <div id='end-of-messages'/>
             </div>
-            <NewMessage user={user} selectedRoomId={selectedRoomId} />
+            <NewMessage user={user} selectedRoomId={selectedChatroomId} />
         </div>
     )
 }
