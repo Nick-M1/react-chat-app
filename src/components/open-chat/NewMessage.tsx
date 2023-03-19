@@ -1,5 +1,5 @@
 import { User } from 'firebase/auth';
-import { doc, setDoc } from 'firebase/firestore';
+import {doc, serverTimestamp, setDoc, updateDoc} from 'firebase/firestore';
 import React, {useState} from "react";
 import {db} from "../../firebase";
 import { v4 as uuidv4 } from 'uuid';
@@ -23,7 +23,7 @@ export default function NewMessage({ user, selectedRoomId }: Props) {
 
         await setDoc(doc(db, "rooms", selectedRoomId, "messages", newMessageId), {
             id: newMessageId,
-            createdAt: Date.now(),
+            timestamp: serverTimestamp(),
             text: formValue,
 
             user: {
@@ -33,6 +33,10 @@ export default function NewMessage({ user, selectedRoomId }: Props) {
                 image: user.photoURL
             } as UserType
         } as Message);
+
+        await updateDoc(doc(db, 'rooms', selectedRoomId), {
+            timestamp: serverTimestamp()
+        })
 
         setFormValue('')
         // todo: Scroll to scrollToBottom

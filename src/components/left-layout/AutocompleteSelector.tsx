@@ -15,8 +15,6 @@ type Props = {
 }
 
 export default function AutocompleteSelector({ selectedUsers, setSelectedUsers, newChatFormvalue, setNewChatFormvalue, newChatAutocomplete }: Props) {
-    useEffect(() => console.log(selectedUsers), [selectedUsers])
-
     return (
         <div className='relative border-none cursor-pointer w-full'>
             <Combobox value={selectedUsers} onChange={(users) => setSelectedUsers(users)} multiple>

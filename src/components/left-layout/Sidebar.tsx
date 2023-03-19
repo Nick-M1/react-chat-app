@@ -1,0 +1,248 @@
+import {Dialog, Transition} from "@headlessui/react";
+import {Dispatch, Fragment, SetStateAction, useEffect, useState} from "react";
+import {MagnifyingGlassIcon} from "@heroicons/react/24/outline";
+import {XMarkIcon} from "@heroicons/react/24/solid";
+
+import {User} from "firebase/auth";
+import SignoutButton from "../authentication/SignoutButton";
+import {arrayUnion, collection, doc, getDocs, onSnapshot, query, serverTimestamp, setDoc, updateDoc, where} from "firebase/firestore";
+import {db} from "../../firebase";
+import ChatroomSingle from "./ChatroomSingle";
+import {v4 as uuidv4} from "uuid";
+import AutocompleteSelector from "./AutocompleteSelector";
+
+type Props = {
+    user: User
+
+    selectedChatroomId: string
+    setSelectedChatroomId: Dispatch<SetStateAction<string>>
+}
+
+export default function Sidebar({ user, selectedChatroomId, setSelectedChatroomId }: Props) {
+
+    // FILTER FOR CHATS
+    const [chatSearchFilter, setChatSearchFilter] = useState('')
+    const [allChatrooms, setAllChatrooms] = useState<ChatRoom[]>([])
+    const chatroomUnsub = onSnapshot(
+        query(
+            collection(db, "rooms"),
+            where('userIds', 'array-contains', user?.uid),
+            where('name', '>=', chatSearchFilter),
+            where('name', '<=', chatSearchFilter + '\uf8ff'),
+        ),
+        (docs) => {
+            setAllChatrooms(docs.docs.map(d => d.data() as ChatRoom))
+        });
+    useEffect(() => { return () => chatroomUnsub() }, [])
+
+
+
+    // FOR NEW CHAT POPUP
+    const [newChatFormvalue, setNewChatFormvalue] = useState('')
+    const [newChatAutocomplete, setNewChatAutocomplete] = useState<UserType[]>([])
+    useEffect(() => {
+        if (newChatFormvalue.length > 3) {
+            getDocs(
+                query(
+                    collection(db, 'users'),
+                    where('email', '>=', newChatFormvalue),
+                    where('email', '<=', newChatFormvalue + '\uf8ff'),
+                    where('email', '!=', user.email)
+                )
+            ).then(r => setNewChatAutocomplete(r.docs.map(d => d.data() as UserType)))
+
+        } else
+            setNewChatAutocomplete( selectedUsers)
+    }, [newChatFormvalue])
+
+    // new chat form values
+    const [newChatTitle, setNewChatTitle] = useState('')
+    const [selectedUsers, setSelectedUsers] = useState<UserType[]>([])
+
+    // popup's state
+    const [newChatPopup, setNewChatPopup] = useState(false)
+    const openNewChatPopup = () => setNewChatPopup(true)
+    const closeNewChatPopup = () => {
+        setSelectedUsers([])
+        setNewChatTitle('')
+        setNewChatPopup(false)
+    }
+
+    const newChatHandler = async () => {
+        if (newChatTitle.length < 3)        //todo: toast
+            return
+        if (selectedUsers.length == 0)
+            return
+
+        const newRoomId = uuidv4()
+
+        const roomsRef = doc(db, "rooms", newRoomId)
+        await setDoc(roomsRef, {
+            id: newRoomId,
+            timestamp: serverTimestamp(),
+            name: newChatTitle,
+            userIds: [...selectedUsers.map(u => u.id), user.uid],
+            users: [ ...selectedUsers, {
+                id: user.uid,
+                displayname: user.displayName,
+                email: user.email,
+                image: user.photoURL
+            } as UserType ]
+        } as ChatRoom);
+
+        setSelectedChatroomId(newRoomId)
+        closeNewChatPopup()
+    }
+
+    return (
+        <div className="flex w-[20vw]">
+            <div className="max-h-screen backdrop-blur-lg w-[400px] min-h-screen border-r border-gray-700">
+                <div className="pt-5 text-center align-middle px-6 flex">
+                    <img
+                        src="/brand-logo.svg"
+                        alt="chatCube"
+                        width={35}
+                        height={35}
+                        className=""
+                    />
+                    <h1 className='ml-3 mt-1 font-bold text-xl'>Chat App</h1>
+
+                    <div className='ml-auto flex'>
+                        {/* todo: Dropdown with signout */}
+                        <img
+                            src={ user && user.photoURL != null ? user.photoURL : "/unknown-profilepic.png" }
+                            alt="chatCube"
+                            width={35}
+                            height={35}
+                            className="rounded-full"
+                        />
+                    </div>
+                </div>
+                <div className="flex items-center justify-center p-3 border-b-[1px] border-indigo-900">
+                    <div className="flex items-center justify-center p-3 text-black bg-white/10 backdrop-filter backdrop-blur-2xl rounded-xl w-80">
+                        <MagnifyingGlassIcon className="w-6 h-6 dark:text-white  text-black" />
+                        <input
+                            className="flex-1 ml-3 text-black placeholder-black  dark:text-white dark:placeholder-white bg-transparent border-none outline-none"
+                            placeholder="Search in chats"
+                            type="text"
+                            value={chatSearchFilter}
+                            onChange={(e) => setChatSearchFilter(e.target.value)}
+                        />
+                    </div>
+                </div>
+                <hr className="text-transparent bg-transparent" />
+
+                <div>
+                    <div className="px-3 pt-5">
+                        <p className="pb-5 text-sm font-medium tracking-widest uppercase">
+                            direct messages
+                        </p>
+                    </div>
+                    <div className="w-full max-h-[65vh] overflow-y-scroll scrollbar smooth-transition">
+                        { allChatrooms.map((chat) => (
+                            <ChatroomSingle key={chat.id} chatroom={chat} selectedChatroomId={selectedChatroomId} setSelectedChatroomId={setSelectedChatroomId} />
+                        ))}
+                    </div>
+                </div>
+
+                <div className="absolute bottom-0 w-full border-t-2 border-gray-700 focus:outline-none py-2 px-8">
+                    <button
+                        className="bg-blue-700 text-white shadow-lg p-2 text-center font-semibold rounded-sm w-full"
+                        onClick={openNewChatPopup}
+                    >
+                        Start a new chat
+                    </button>
+                </div>
+            </div>
+
+            {/* Create new chat popup */}
+            <Transition appear show={newChatPopup} as={Fragment}>
+                <Dialog
+                    as="div"
+                    className="fixed inset-0 z-50 overflow-y-auto bg-black bg-opacity-50 backdrop-blur-sm"
+                    onClose={closeNewChatPopup}
+                >
+                    <div className="min-h-screen px-4 text-center">
+                        <Transition.Child
+                            as={Fragment}
+                            enter="ease-out duration-300"
+                            enterFrom="opacity-0"
+                            enterTo="opacity-100"
+                            leave="ease-in duration-200"
+                            leaveFrom="opacity-100"
+                            leaveTo="opacity-0"
+                        >
+                            <Dialog.Overlay className="fixed inset-0" />
+                        </Transition.Child>
+
+                        <span
+                            className="inline-block h-screen align-middle"
+                            aria-hidden="true"
+                        >
+                          &#8203;
+                        </span>
+                        <Transition.Child
+                            as={Fragment}
+                            enter="ease-out duration-300"
+                            enterFrom="opacity-0 scale-95"
+                            enterTo="opacity-100 scale-100"
+                            leave="ease-in duration-200"
+                            leaveFrom="opacity-100 scale-100"
+                            leaveTo="opacity-0 scale-95"
+                        >
+                            <div className="inline-block w-full max-w-xl py-6 px-8 my-8 text-left align-middle transition-all transform bg-neutral-800 shadow-xl rounded-xl">
+                                <Dialog.Title
+                                    as="h3"
+                                    className="pb-3 text-2xl leading-6 text-white border-b border-gray-700 text-center"
+                                >
+                                    Start a new chat
+                                    <div onClick={() => closeNewChatPopup()} className='absolute p-1 right-6 top-5 bg-neutral-700/75 hover:bg-neutral-700 active:bg-neutral-600/95 rounded-full cursor-pointer smooth-transition'>
+                                        <XMarkIcon className='w-6 w-6'/>
+                                    </div>
+                                </Dialog.Title>
+
+                                <div className='py-3'>
+                                    <h1 className='text-lg leading-6 font-medium text-gray-300'>
+                                        Chat Title
+                                    </h1>
+                                    <input
+                                        type="text"
+                                        name="title"
+                                        id="title"
+                                        className={`p-2.5 mt-1 block w-full input-secondary ${newChatTitle == '' && 'input-secondary-invalid' }`}
+                                        placeholder="Write a title for your recipe..."
+                                        defaultValue={newChatTitle}
+                                        onChange={(e) => setNewChatTitle(e.target.value)}
+                                    />
+                                </div>
+
+                                <div>
+                                    <h1 className='text-lg leading-6 font-medium text-gray-300'>
+                                        Select Contacts
+                                    </h1>
+                                    <div className='flex space-x-4'>
+                                        <AutocompleteSelector
+                                            selectedUsers={selectedUsers} setSelectedUsers={setSelectedUsers}
+                                            newChatFormvalue={newChatFormvalue} setNewChatFormvalue={setNewChatFormvalue}
+                                            newChatAutocomplete={newChatAutocomplete}
+                                        />
+                                        {/* todo: put input css into index.css */}
+                                        <div className="">
+                                            <button
+                                                type="button"
+                                                className="inline-flex min-w-[135px] justify-center py-3 text-sm font-medium text-blue-900 bg-blue-100 border border-transparent rounded-xl hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500"
+                                                onClick={() => newChatHandler()}
+                                            >
+                                                Start new chat!
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </Transition.Child>
+                    </div>
+                </Dialog>
+            </Transition>
+        </div>
+    );
+}

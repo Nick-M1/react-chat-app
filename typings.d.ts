@@ -1,6 +1,6 @@
 type Message = {
     id: string
-    createdAt: number
+    timestamp: any
     text: string
 
     user: UserType
@@ -8,6 +8,8 @@ type Message = {
 
 type ChatRoom = {
     id: string
+    name: string
+    timestamp: any
     userIds: string[]
     users: UserType[]
 }

@@ -3,6 +3,7 @@ import {Fragment, useState} from "react";
 import {User} from "firebase/auth";
 import {EllipsisVerticalIcon, PencilIcon, TrashIcon} from "@heroicons/react/24/outline";
 import Linkify from 'react-linkify';
+import dateFormatter from "../../utils/time-formatter";
 
 
 type Props = {
@@ -61,7 +62,7 @@ export default function MessageSingle({ message, user }: Props) {
                     )}
                 </div>
                 <p className="text-gray-400 min-w-[80px] p-2 text-xs absolute bottom-0 text-right right-0 mt-3">
-                    { message.createdAt }
+                    { message.timestamp != null && dateFormatter(message.timestamp.toDate()) }
                 </p>
             </div>
             <Transition appear show={modal} as={Fragment}>
