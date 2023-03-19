@@ -19,7 +19,7 @@ export default function MessageSingle({ message, user }: Props) {
     const closeModal = () => setModal(false)
 
     return (
-        <div className="min-w-[80px]">
+        <div className="min-w-[80px]" id={message.id}>
             <div
                 style={{ width: "fit-content" }}
                 className={`p-4 rounded-lg m-3 min-w-[80px] pb-7 relative text-center break-all text-white ${

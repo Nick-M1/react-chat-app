@@ -9,6 +9,7 @@ type Message = {
 type ChatRoom = {
     id: string
     name: string
+    name_lowercase: string
     timestamp: any
     userIds: string[]
     users: UserType[]

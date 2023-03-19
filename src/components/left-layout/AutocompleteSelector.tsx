@@ -12,23 +12,24 @@ type Props = {
     setNewChatFormvalue: Dispatch<SetStateAction<string>>
 
     newChatAutocomplete: UserType[]
+    newChatFormInvalid: boolean
 }
 
-export default function AutocompleteSelector({ selectedUsers, setSelectedUsers, newChatFormvalue, setNewChatFormvalue, newChatAutocomplete }: Props) {
+export default function AutocompleteSelector({ selectedUsers, setSelectedUsers, newChatFormvalue, setNewChatFormvalue, newChatAutocomplete, newChatFormInvalid }: Props) {
     return (
         <div className='relative border-none cursor-pointer w-full'>
             <Combobox value={selectedUsers} onChange={(users) => setSelectedUsers(users)} multiple>
 
-                <div className="group relative flex items-center w-full h-12 rounded-lg border border-gray-600 hover:border-gray-400 focus-within:ring-1 focus-within:ring-blue-400 backdrop-blur-lg overflow-hidden smooth-transition">
+                <div className="group relative flex items-center w-full h-12">
                     <Combobox.Input
                         value={newChatFormvalue}
                         onChange={(event) => setNewChatFormvalue(event.target.value)}
                         placeholder='Search for someone'
-                        className='peer h-full w-full p-4 outline-none border-none bg-white/10 backdrop-blur-lg text-gray-200 placeholder:text-gray-300 md:pr-2 bg-none focus:outline-none focus:ring-0 smooth-transition' />
+                        className={`peer h-full input-primary ${newChatFormInvalid && selectedUsers.length == 0 && 'input-primary-invalid'}`} />
 
                     <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
                         <ChevronUpDownIcon
-                            className="h-5 w-5 text-gray-400"
+                            className="h-6 w-6 text-gray-400 mt-0.5"
                             aria-hidden="true"
                         />
                     </Combobox.Button>

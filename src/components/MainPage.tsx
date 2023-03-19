@@ -16,7 +16,7 @@ export default function MainPage({ user }: Props) {
                 <Sidebar user={user} selectedChatroomId={selectedChatroomId} setSelectedChatroomId={setSelectedChatroomId} />
             </div>
             { selectedChatroomId != '' ? (
-                <div className="w-[70vw] md:overflow-y-scroll scrollbar md:pr-2 md:pl-24">
+                <div className="md:w-[80vw] md:overflow-y-scroll scrollbar ml-auto">
                     <ChatScreen user={user} selectedRoomId={selectedChatroomId} />
                 </div>
             ) : (

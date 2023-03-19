@@ -2,18 +2,21 @@ import {Dialog, Transition} from "@headlessui/react";
 import {Dispatch, Fragment, SetStateAction, useEffect, useState} from "react";
 import {MagnifyingGlassIcon} from "@heroicons/react/24/outline";
 import {XMarkIcon} from "@heroicons/react/24/solid";
-
 import {User} from "firebase/auth";
-import SignoutButton from "../authentication/SignoutButton";
-import {arrayUnion, collection, doc, getDocs, onSnapshot, query, serverTimestamp, setDoc, updateDoc, where} from "firebase/firestore";
+import {collection, doc, getDocs, onSnapshot, query, serverTimestamp, setDoc, where, or} from "firebase/firestore";
 import {db} from "../../firebase";
 import ChatroomSingle from "./ChatroomSingle";
 import {v4 as uuidv4} from "uuid";
 import AutocompleteSelector from "./AutocompleteSelector";
+import SignoutButton from "../authentication/SignoutButton";
+import smoothScroll from "../../utils/smooth-scroll";
+
+function checkNewChatTitle(newChatTitle: string) {
+    return newChatTitle.length < 3 || newChatTitle.length > 20
+}
 
 type Props = {
     user: User
-
     selectedChatroomId: string
     setSelectedChatroomId: Dispatch<SetStateAction<string>>
 }
@@ -27,8 +30,8 @@ export default function Sidebar({ user, selectedChatroomId, setSelectedChatroomI
         query(
             collection(db, "rooms"),
             where('userIds', 'array-contains', user?.uid),
-            where('name', '>=', chatSearchFilter),
-            where('name', '<=', chatSearchFilter + '\uf8ff'),
+            where('name_lowercase', '>=', chatSearchFilter.toLowerCase()),
+            where('name_lowercase', '<=', chatSearchFilter.toLowerCase() + '\uf8ff'),
         ),
         (docs) => {
             setAllChatrooms(docs.docs.map(d => d.data() as ChatRoom))
@@ -56,6 +59,7 @@ export default function Sidebar({ user, selectedChatroomId, setSelectedChatroomI
     }, [newChatFormvalue])
 
     // new chat form values
+    const [newChatFormInvalid, setNewChatFormInvalid] = useState(false)
     const [newChatTitle, setNewChatTitle] = useState('')
     const [selectedUsers, setSelectedUsers] = useState<UserType[]>([])
 
@@ -65,14 +69,20 @@ export default function Sidebar({ user, selectedChatroomId, setSelectedChatroomI
     const closeNewChatPopup = () => {
         setSelectedUsers([])
         setNewChatTitle('')
+        setNewChatFormInvalid(false)
         setNewChatPopup(false)
     }
 
     const newChatHandler = async () => {
-        if (newChatTitle.length < 3)        //todo: toast
+        if (newChatTitle.length < 3) {        //todo: toast
+            setNewChatFormInvalid(true)
             return
-        if (selectedUsers.length == 0)
+        }
+        if (selectedUsers.length == 0) {
+            setNewChatFormInvalid(true)
             return
+        }
+
 
         const newRoomId = uuidv4()
 
@@ -81,6 +91,8 @@ export default function Sidebar({ user, selectedChatroomId, setSelectedChatroomI
             id: newRoomId,
             timestamp: serverTimestamp(),
             name: newChatTitle,
+            name_lowercase: newChatTitle.toLowerCase(),
+
             userIds: [...selectedUsers.map(u => u.id), user.uid],
             users: [ ...selectedUsers, {
                 id: user.uid,
@@ -109,6 +121,7 @@ export default function Sidebar({ user, selectedChatroomId, setSelectedChatroomI
 
                     <div className='ml-auto flex'>
                         {/* todo: Dropdown with signout */}
+                        {/*<SignoutButton/>*/}
                         <img
                             src={ user && user.photoURL != null ? user.photoURL : "/unknown-profilepic.png" }
                             alt="chatCube"
@@ -118,11 +131,11 @@ export default function Sidebar({ user, selectedChatroomId, setSelectedChatroomI
                         />
                     </div>
                 </div>
-                <div className="flex items-center justify-center p-3 border-b-[1px] border-indigo-900">
-                    <div className="flex items-center justify-center p-3 text-black bg-white/10 backdrop-filter backdrop-blur-2xl rounded-xl w-80">
-                        <MagnifyingGlassIcon className="w-6 h-6 dark:text-white  text-black" />
+                <div className="flex items-center justify-center px-3 py-4 border-b-2 border-gray-700 ">
+                    <div className="flex w-full items-center justify-center p-3 text-black bg-white/10 backdrop-filter backdrop-blur-2xl rounded-xl hover:ring-2 hover:ring-gray-600 smooth-transition">
+                        <MagnifyingGlassIcon className="w-6 h-6 text-white" />
                         <input
-                            className="flex-1 ml-3 text-black placeholder-black  dark:text-white dark:placeholder-white bg-transparent border-none outline-none"
+                            className="flex-1 ml-3 text-white placeholder-gray-400 bg-transparent border-none outline-none"
                             placeholder="Search in chats"
                             type="text"
                             value={chatSearchFilter}
@@ -130,12 +143,11 @@ export default function Sidebar({ user, selectedChatroomId, setSelectedChatroomI
                         />
                     </div>
                 </div>
-                <hr className="text-transparent bg-transparent" />
 
                 <div>
                     <div className="px-3 pt-5">
-                        <p className="pb-5 text-sm font-medium tracking-widest uppercase">
-                            direct messages
+                        <p className="pb-5 text-sm font-medium tracking-widest">
+                            DIRECT MESSAGES
                         </p>
                     </div>
                     <div className="w-full max-h-[65vh] overflow-y-scroll scrollbar smooth-transition">
@@ -147,7 +159,7 @@ export default function Sidebar({ user, selectedChatroomId, setSelectedChatroomI
 
                 <div className="absolute bottom-0 w-full border-t-2 border-gray-700 focus:outline-none py-2 px-8">
                     <button
-                        className="bg-blue-700 text-white shadow-lg p-2 text-center font-semibold rounded-sm w-full"
+                        className=" w-full btn-primary "
                         onClick={openNewChatPopup}
                     >
                         Start a new chat
@@ -201,7 +213,7 @@ export default function Sidebar({ user, selectedChatroomId, setSelectedChatroomI
                                     </div>
                                 </Dialog.Title>
 
-                                <div className='py-3'>
+                                <div className='pt-3 pb-6'>
                                     <h1 className='text-lg leading-6 font-medium text-gray-300'>
                                         Chat Title
                                     </h1>
@@ -209,15 +221,16 @@ export default function Sidebar({ user, selectedChatroomId, setSelectedChatroomI
                                         type="text"
                                         name="title"
                                         id="title"
-                                        className={`p-2.5 mt-1 block w-full input-secondary ${newChatTitle == '' && 'input-secondary-invalid' }`}
+                                        className={`block input-primary ${newChatFormInvalid && checkNewChatTitle(newChatTitle) && 'input-primary-invalid' }`}
                                         placeholder="Write a title for your recipe..."
                                         defaultValue={newChatTitle}
                                         onChange={(e) => setNewChatTitle(e.target.value)}
                                     />
+                                    <p className={newChatFormInvalid && checkNewChatTitle(newChatTitle) ? 'text-red-600 text-sm tracking-wide italic mt-0.5' : 'hidden'}>Title must have between 3 and 21 characters</p>
                                 </div>
 
                                 <div>
-                                    <h1 className='text-lg leading-6 font-medium text-gray-300'>
+                                    <h1 className='text-lg leading-6 font-medium text-gray-300 mb-1'>
                                         Select Contacts
                                     </h1>
                                     <div className='flex space-x-4'>
@@ -225,18 +238,20 @@ export default function Sidebar({ user, selectedChatroomId, setSelectedChatroomI
                                             selectedUsers={selectedUsers} setSelectedUsers={setSelectedUsers}
                                             newChatFormvalue={newChatFormvalue} setNewChatFormvalue={setNewChatFormvalue}
                                             newChatAutocomplete={newChatAutocomplete}
+                                            newChatFormInvalid={newChatFormInvalid}
                                         />
                                         {/* todo: put input css into index.css */}
-                                        <div className="">
+                                        <div className="mt-0.5">
                                             <button
                                                 type="button"
-                                                className="inline-flex min-w-[135px] justify-center py-3 text-sm font-medium text-blue-900 bg-blue-100 border border-transparent rounded-xl hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500"
+                                                className="inline-flex min-w-[135px] btn-secondary"
                                                 onClick={() => newChatHandler()}
                                             >
                                                 Start new chat!
                                             </button>
                                         </div>
                                     </div>
+                                    <p className={newChatFormInvalid && selectedUsers.length == 0 ? 'text-red-600 text-sm tracking-wide italic mt-1' : 'hidden'}>Must add at least 1 other person to the chat</p>
                                 </div>
                             </div>
                         </Transition.Child>

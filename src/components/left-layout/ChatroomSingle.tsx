@@ -1,5 +1,6 @@
-import {Dispatch, SetStateAction} from "react";
+import {Dispatch, SetStateAction, useEffect} from "react";
 import dateFormatter from "../../utils/time-formatter";
+import smoothScroll from "../../utils/smooth-scroll";
 
 type Props = {
     chatroom: ChatRoom
@@ -15,10 +16,13 @@ export default function ChatroomSingle({ chatroom, selectedChatroomId, setSelect
         if (!isActive)
             setSelectedChatroomId(chatroom.id)
     }
+    useEffect(() => {
+        setTimeout(() => smoothScroll('end-of-messages', 'center', false), 7)
+    }, [selectedChatroomId])
 
     return (
         <div
-            className={`flex items-center cursor-pointer p-4 break-words border-t border-gray-700 smooth-transition ${isActive ? 'bg-blue-600/10 hover:bg-blue-600/20 active:bg-blue-600/25' : 'bg-transparent hover:bg-white/5 active:bg-white/10'}`}
+            className={`flex items-center cursor-pointer px-4 py-2.5 break-words border-t border-gray-700 smooth-transition ${isActive ? 'bg-blue-600/10 hover:bg-blue-600/20 active:bg-blue-600/25' : 'bg-transparent hover:bg-white/5 active:bg-white/10'}`}
             onClick={enterChatHandler}
         >
             <img
