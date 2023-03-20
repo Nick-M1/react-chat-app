@@ -1,5 +1,5 @@
 import Sidebar from "./left-layout/Sidebar";
-import {useEffect, useState} from "react";
+import {KeyboardEvent, useCallback, useEffect, useState} from "react";
 import {User} from "firebase/auth";
 import ChatScreen from "./open-chat/ChatScreen";
 
@@ -11,6 +11,7 @@ type Props = {
 }
 
 export default function MainPage({ user }: Props) {
+    const isMobile = window.innerWidth < 768;
     const [selectedChatroomId, setSelectedChatroomId] = useState<string>('')
     const [allChatrooms, setAllChatrooms] = useState<ChatRoom[]>([])
 
@@ -19,7 +20,22 @@ export default function MainPage({ user }: Props) {
     useEffect(() => { if (!mobileChatOpen) setSelectedChatroomId('') }, [mobileChatOpen])
 
 
-    const isMobile = window.innerWidth < 768;
+    // Back button on mobile
+    useEffect(() => {
+        function handleKeyDown(e: globalThis.KeyboardEvent) {
+            if (isMobile && e.key == 'Backspace')
+                setMobileChatOpen(false)
+        }
+
+        document.addEventListener('keydown', handleKeyDown);
+
+        // clean up
+        return function cleanup() {
+            document.removeEventListener('keydown', handleKeyDown);
+        }
+    }, []);
+
+    // Animations for framer-motion
     const initialVariants: any = (fromLeft: boolean) => {
         // if (!isMobile) return undefined
         return { x: fromLeft ? -700 : 700, display: 'block' }
@@ -41,6 +57,8 @@ export default function MainPage({ user }: Props) {
             }
         }
     }
+
+
 
     return (
         <div className="overflow-x-clip flex w-screen h-[100dvh] lg:h-screen bg-neutral-800 text-white">
