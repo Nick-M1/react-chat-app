@@ -22,7 +22,7 @@ export default function MainPage({ user }: Props) {
     const isMobile = window.innerWidth < 768;
     const initialVariants: any = (fromLeft: boolean) => {
         // if (!isMobile) return undefined
-        return { x: fromLeft ? -700 : 700 }
+        return { x: fromLeft ? -700 : 700, display: 'block' }
     }
     const animationVariants: any = (show: boolean, fromLeft: boolean) => {
         if (!isMobile)
