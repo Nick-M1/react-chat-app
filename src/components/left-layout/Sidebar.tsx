@@ -157,7 +157,7 @@ export default function Sidebar({ user, selectedChatroomId, setSelectedChatroomI
                     </div>
                 </div>
 
-                <div className="absolute bottom-0 w-full border-t-2 border-gray-700 focus:outline-none py-2 px-8">
+                <div className="absolute bottom-0 w-full bg-neutral-800 border-t-2 border-gray-700 focus:outline-none py-2 px-8">
                     <button
                         className=" w-full btn-primary "
                         onClick={openNewChatPopup}
