@@ -42,76 +42,76 @@ export default function MainPage({ user }: Props) {
         }
     }
 
-    // return (
-    //     <div className="overflow-x-clip overflow-y-clip flex w-screen bg-neutral-800 text-white">
-    //         <motion.div
-    //             key="slider-modal"
-    //             className={`w-screen md:w-[20vw]`}
-    //             initial={ initialVariants(true) }
-    //             animate={ animationVariants(!mobileChatOpen, true) }
-    //             transition={{ type: "just" }}
-    //         >
-    //             <Sidebar
-    //                 user={user}
-    //                 selectedChatroomId={selectedChatroomId} setSelectedChatroomId={setSelectedChatroomId}
-    //                 allChatrooms={allChatrooms} setAllChatrooms={setAllChatrooms}
-    //             />
-    //         </motion.div>
-    //
-    //         <motion.div
-    //             key="mainchat-modal"
-    //             className={`w-screen md:w-[80vw]`}
-    //             initial={ initialVariants(false) }
-    //             animate={ animationVariants(mobileChatOpen, false) }
-    //             transition={{ type: "just" }}
-    //         >
-    //             { selectedChatroomId != '' ? (
-    //                 <div className={`w-full md:ml-auto md:overflow-y-scroll scrollbar `}>
-    //                     <ChatScreen
-    //                         user={user}
-    //                         selectedChatroomId={selectedChatroomId}
-    //                         selectedChatroom={allChatrooms.find(c => c.id == selectedChatroomId)}
-    //                         setMobileChatOpen={setMobileChatOpen}
-    //                     />
-    //                 </div>
-    //             ) : (
-    //                 <div className={`hidden md:block w-full m-auto`}>
-    //                     <h2 className="text-2xl font-semibold text-center">
-    //                         Click on a chat or create a new chat
-    //                     </h2>
-    //                 </div>
-    //             )}
-    //         </motion.div>
-    //     </div>
-    // )
-
-    // OLD VERSION - NO FRAMER MOTION
     return (
-        <div className="md:overflow-y-hidden flex w-screen h-screen bg-neutral-800 text-white">
-            <div className={`${mobileChatOpen ? 'hidden' : 'block'} w-screen md:w-[20vw] md:block`}>
+        <div className="overflow-x-clip overflow-y-clip flex w-screen bg-neutral-800 text-white">
+            <motion.div
+                key="slider-modal"
+                className={`w-screen md:w-[20vw]`}
+                initial={ initialVariants(true) }
+                animate={ animationVariants(!mobileChatOpen, true) }
+                transition={{ type: "just" }}
+            >
                 <Sidebar
                     user={user}
                     selectedChatroomId={selectedChatroomId} setSelectedChatroomId={setSelectedChatroomId}
                     allChatrooms={allChatrooms} setAllChatrooms={setAllChatrooms}
                 />
-            </div>
+            </motion.div>
 
-            { selectedChatroomId != '' ? (
-                <div className={`${mobileChatOpen ? 'block' : 'hidden'} md:block w-screen md:w-[80vw] md:overflow-y-scroll scrollbar md:ml-auto`}>
-                    <ChatScreen
-                        user={user}
-                        selectedChatroomId={selectedChatroomId}
-                        selectedChatroom={allChatrooms.find(c => c.id == selectedChatroomId)}
-                        setMobileChatOpen={setMobileChatOpen}
-                    />
-                </div>
-            ) : (
-                <div className={`${mobileChatOpen ? 'block' : 'hidden'} md:block w-screen md:w-[80vw] m-auto`}>
-                    <h2 className="text-2xl font-semibold text-center">
-                        Click on a chat or create a new chat
-                    </h2>
-                </div>
-            )}
+            <motion.div
+                key="mainchat-modal"
+                className={`w-screen md:w-[80vw]`}
+                initial={ initialVariants(false) }
+                animate={ animationVariants(mobileChatOpen, false) }
+                transition={{ type: "just" }}
+            >
+                { selectedChatroomId != '' ? (
+                    <div className={`w-full md:ml-auto md:overflow-y-scroll scrollbar `}>
+                        <ChatScreen
+                            user={user}
+                            selectedChatroomId={selectedChatroomId}
+                            selectedChatroom={allChatrooms.find(c => c.id == selectedChatroomId)}
+                            setMobileChatOpen={setMobileChatOpen}
+                        />
+                    </div>
+                ) : (
+                    <div className={`hidden md:block w-full m-auto`}>
+                        <h2 className="text-2xl font-semibold text-center">
+                            Click on a chat or create a new chat
+                        </h2>
+                    </div>
+                )}
+            </motion.div>
         </div>
     )
+
+    // OLD VERSION - NO FRAMER MOTION
+    // return (
+    //     <div className="md:overflow-y-hidden flex w-screen h-screen bg-neutral-800 text-white">
+    //         <div className={`${mobileChatOpen ? 'hidden' : 'block'} w-screen md:w-[20vw] md:block`}>
+    //             <Sidebar
+    //                 user={user}
+    //                 selectedChatroomId={selectedChatroomId} setSelectedChatroomId={setSelectedChatroomId}
+    //                 allChatrooms={allChatrooms} setAllChatrooms={setAllChatrooms}
+    //             />
+    //         </div>
+    //
+    //         { selectedChatroomId != '' ? (
+    //             <div className={`${mobileChatOpen ? 'block' : 'hidden'} md:block w-screen md:w-[80vw] md:overflow-y-scroll scrollbar md:ml-auto`}>
+    //                 <ChatScreen
+    //                     user={user}
+    //                     selectedChatroomId={selectedChatroomId}
+    //                     selectedChatroom={allChatrooms.find(c => c.id == selectedChatroomId)}
+    //                     setMobileChatOpen={setMobileChatOpen}
+    //                 />
+    //             </div>
+    //         ) : (
+    //             <div className={`${mobileChatOpen ? 'block' : 'hidden'} md:block w-screen md:w-[80vw] m-auto`}>
+    //                 <h2 className="text-2xl font-semibold text-center">
+    //                     Click on a chat or create a new chat
+    //                 </h2>
+    //             </div>
+    //         )}
+    //     </div>
+    // )
 }
