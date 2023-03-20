@@ -116,7 +116,7 @@ export default function Sidebar({ user, selectedChatroomId, setSelectedChatroomI
 
     return (
         <div className="flex w-full md:w-[20vw]">
-            <div className="max-h-screen backdrop-blur-lg w-full md:w-[400px] min-h-screen border-r border-gray-700">
+            <div className="max-h-screen backdrop-blur-lg w-full md:w-[400px] border-r border-gray-700">
                 <div className="pt-5 pb-6 text-center align-middle px-6 flex border-b border-gray-700">
                     <img
                         src="/brand-logo.svg"
