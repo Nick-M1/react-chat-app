@@ -60,7 +60,7 @@ export default function MainPage({ user }: Props) {
 
             <motion.div
                 key="mainchat-modal"
-                className={`w-screen md:w-[80vw]`}
+                className={`w-screen md:w-[80vw] h-full`}
                 initial={ initialVariants(false) }
                 animate={ animationVariants(mobileChatOpen, false) }
                 transition={{ type: "just" }}
