@@ -43,7 +43,7 @@ export default function MainPage({ user }: Props) {
     }
 
     return (
-        <div className="overflow-x-clip overflow-y-clip flex w-screen h-screen bg-neutral-800 text-white">
+        <div className="overflow-x-clip overflow-y-clip flex w-screen bg-neutral-800 text-white">
             <motion.div
                 key="slider-modal"
                 className={`w-screen md:w-[20vw]`}
@@ -60,7 +60,7 @@ export default function MainPage({ user }: Props) {
 
             <motion.div
                 key="mainchat-modal"
-                className={`w-screen md:w-[80vw] h-full`}
+                className={`w-screen md:w-[80vw]`}
                 initial={ initialVariants(false) }
                 animate={ animationVariants(mobileChatOpen, false) }
                 transition={{ type: "just" }}
