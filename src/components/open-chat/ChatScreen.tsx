@@ -30,7 +30,7 @@ export default function ChatScreen({ user, selectedChatroomId, selectedChatroom,
     return (
         <div className=''>
             <ChatScreenHeader selectedChatroom={selectedChatroom} setMobileChatOpen={setMobileChatOpen} />
-            <div className='w-full h-[80vh] px-0.5 md:px-3 overflow-y-scroll scrollbar scroll-smooth flex flex-col-reverse'>
+            <div className='w-full h-[80dvh] lg:h-[80vh] px-0.5 md:px-3 overflow-y-scroll scrollbar scroll-smooth flex flex-col-reverse'>
                 <div id='end-of-messages'/>
                 {messages && messages.map(msg => <MessageSingle key={msg.id} message={msg} user={user} />)}
             </div>
