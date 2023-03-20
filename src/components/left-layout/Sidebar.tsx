@@ -8,8 +8,7 @@ import {db} from "../../firebase";
 import ChatroomSingle from "./ChatroomSingle";
 import {v4 as uuidv4} from "uuid";
 import AutocompleteSelector from "./AutocompleteSelector";
-import SignoutButton from "../authentication/SignoutButton";
-import smoothScroll from "../../utils/smooth-scroll";
+import UserprofileDropdown from "./UserprofileDropdown";
 
 function checkNewChatTitle(newChatTitle: string) {
     return newChatTitle.length < 3 || newChatTitle.length > 20
@@ -19,13 +18,15 @@ type Props = {
     user: User
     selectedChatroomId: string
     setSelectedChatroomId: Dispatch<SetStateAction<string>>
+
+    allChatrooms: ChatRoom[]
+    setAllChatrooms: Dispatch<SetStateAction<ChatRoom[]>>
 }
 
-export default function Sidebar({ user, selectedChatroomId, setSelectedChatroomId }: Props) {
+export default function Sidebar({ user, selectedChatroomId, setSelectedChatroomId, allChatrooms, setAllChatrooms }: Props) {
 
     // FILTER FOR CHATS
     const [chatSearchFilter, setChatSearchFilter] = useState('')
-    const [allChatrooms, setAllChatrooms] = useState<ChatRoom[]>([])
     const chatroomUnsub = onSnapshot(
         query(
             collection(db, "rooms"),
@@ -107,9 +108,9 @@ export default function Sidebar({ user, selectedChatroomId, setSelectedChatroomI
     }
 
     return (
-        <div className="flex w-[20vw]">
-            <div className="max-h-screen backdrop-blur-lg w-[400px] min-h-screen border-r border-gray-700">
-                <div className="pt-5 text-center align-middle px-6 flex">
+        <div className="flex w-full md:w-[20vw]">
+            <div className="max-h-screen backdrop-blur-lg w-full md:w-[400px] min-h-screen border-r border-gray-700">
+                <div className="pt-5 pb-6 text-center align-middle px-6 flex border-b border-gray-700">
                     <img
                         src="/brand-logo.svg"
                         alt="chatCube"
@@ -119,37 +120,29 @@ export default function Sidebar({ user, selectedChatroomId, setSelectedChatroomI
                     />
                     <h1 className='ml-3 mt-1 font-bold text-xl'>Chat App</h1>
 
-                    <div className='ml-auto flex'>
-                        {/* todo: Dropdown with signout */}
-                        {/*<SignoutButton/>*/}
-                        <img
-                            src={ user && user.photoURL != null ? user.photoURL : "/unknown-profilepic.png" }
-                            alt="chatCube"
-                            width={35}
-                            height={35}
-                            className="rounded-full"
-                        />
-                    </div>
-                </div>
-                <div className="flex items-center justify-center px-3 py-4 border-b-2 border-gray-700 ">
-                    <div className="flex w-full items-center justify-center p-3 text-black bg-white/10 backdrop-filter backdrop-blur-2xl rounded-xl hover:ring-2 hover:ring-gray-600 smooth-transition">
-                        <MagnifyingGlassIcon className="w-6 h-6 text-white" />
-                        <input
-                            className="flex-1 ml-3 text-white placeholder-gray-400 bg-transparent border-none outline-none"
-                            placeholder="Search in chats"
-                            type="text"
-                            value={chatSearchFilter}
-                            onChange={(e) => setChatSearchFilter(e.target.value)}
-                        />
-                    </div>
+                    <UserprofileDropdown user={user}/>
                 </div>
 
                 <div>
-                    <div className="px-3 pt-5">
-                        <p className="pb-5 text-sm font-medium tracking-widest">
+                    <div className="px-3 pt-5 ">
+                        <p className="text-sm font-medium tracking-widest">
                             DIRECT MESSAGES
                         </p>
                     </div>
+
+                    <div className="flex items-center justify-center px-3 pb-4 pt-2 ">
+                        <div className="flex w-full items-center justify-center p-3 text-black bg-white/10 backdrop-filter backdrop-blur-2xl rounded-xl hover:ring-2 hover:ring-gray-600 smooth-transition">
+                            <MagnifyingGlassIcon className="w-6 h-6 text-white" />
+                            <input
+                                className="flex-1 ml-3 text-white placeholder-gray-400 bg-transparent border-none outline-none"
+                                placeholder="Search in chats"
+                                type="text"
+                                value={chatSearchFilter}
+                                onChange={(e) => setChatSearchFilter(e.target.value)}
+                            />
+                        </div>
+                    </div>
+
                     <div className="w-full max-h-[65vh] overflow-y-scroll scrollbar smooth-transition">
                         { allChatrooms.map((chat) => (
                             <ChatroomSingle key={chat.id} chatroom={chat} selectedChatroomId={selectedChatroomId} setSelectedChatroomId={setSelectedChatroomId} />
