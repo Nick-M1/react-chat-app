@@ -150,7 +150,7 @@ export default function Sidebar({ user, selectedChatroomId, setSelectedChatroomI
                         </div>
                     </div>
 
-                    <div className="w-full max-h-[65vh] overflow-y-scroll scrollbar smooth-transition">
+                    <div className="w-full max-h-[65dvh] lg:max-h-[65vh] overflow-y-scroll scrollbar smooth-transition">
                         { allChatrooms.map((chat) => (
                             <ChatroomSingle key={chat.id} chatroom={chat} selectedChatroomId={selectedChatroomId} setSelectedChatroomId={setSelectedChatroomId} />
                         ))}
