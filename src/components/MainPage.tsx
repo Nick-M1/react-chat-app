@@ -43,7 +43,7 @@ export default function MainPage({ user }: Props) {
     }
 
     return (
-        <div className="overflow-x-clip overflow-y-clip flex w-screen bg-neutral-800 text-white">
+        <div className="overflow-x-clip flex w-screen bg-neutral-800 text-white">
             <motion.div
                 key="slider-modal"
                 className={`w-screen md:w-[20vw]`}
