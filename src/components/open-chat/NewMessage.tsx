@@ -51,7 +51,7 @@ export default function NewMessage({ user, selectedRoomId }: Props) {
     }
 
     return (
-        <div className='absolute bottom-2 w-full md:w-[78vw] px-4'>
+        <div className='absolute bottom-2 w-full md:w-[78vw] px-4 bg-neutral-800'>
             <form onSubmit={sendMessageHander} className='flex items-center space-x-2'>
                 <AddimageIcon className='w-8 h-8 shrink-0 fill-blue-100 hover:fill-blue-200 focus:fill-blue-300 cursor-pointer smooth-transition'/>
                 <PaperclipIcon className='w-7 h-7 shrink-0 fill-blue-100 hover:fill-blue-200 focus:fill-blue-300 cursor-pointer smooth-transition'/>

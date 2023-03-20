@@ -9,9 +9,11 @@ import ChatroomSingle from "./ChatroomSingle";
 import {v4 as uuidv4} from "uuid";
 import AutocompleteSelector from "./AutocompleteSelector";
 import UserprofileDropdown from "./UserprofileDropdown";
+import {toastOptionsCustom} from "../../utils/toast-options-custom";
+import toast from "react-hot-toast";
 
-function checkNewChatTitle(newChatTitle: string) {
-    return newChatTitle.length < 3 || newChatTitle.length > 20
+function checkNewChatTitle(newChatTitleLength: number) {
+    return newChatTitleLength < 3 || newChatTitleLength > 20
 }
 
 type Props = {
@@ -75,12 +77,16 @@ export default function Sidebar({ user, selectedChatroomId, setSelectedChatroomI
     }
 
     const newChatHandler = async () => {
-        if (newChatTitle.length < 3) {        //todo: toast
+        toast.loading('Creating new chatroom...', { ...toastOptionsCustom, id: 'new-chatroom' } )
+
+        if (checkNewChatTitle(newChatTitle.length)) {
             setNewChatFormInvalid(true)
+            toast.error('Input error: Title must have between 3 and 21 characters', { id: 'new-chatroom' })
             return
         }
         if (selectedUsers.length == 0) {
             setNewChatFormInvalid(true)
+            toast.error('Input error: Must invite at least 1 other person to the chat', { id: 'new-chatroom' })
             return
         }
 
@@ -103,6 +109,7 @@ export default function Sidebar({ user, selectedChatroomId, setSelectedChatroomI
             } as UserType ]
         } as ChatRoom);
 
+        toast.success('Chat created successfully', { id: 'new-chatroom' })
         setSelectedChatroomId(newRoomId)
         closeNewChatPopup()
     }
@@ -214,12 +221,12 @@ export default function Sidebar({ user, selectedChatroomId, setSelectedChatroomI
                                         type="text"
                                         name="title"
                                         id="title"
-                                        className={`block input-primary ${newChatFormInvalid && checkNewChatTitle(newChatTitle) && 'input-primary-invalid' }`}
+                                        className={`block input-primary ${newChatFormInvalid && checkNewChatTitle(newChatTitle.length) && 'input-primary-invalid' }`}
                                         placeholder="Write a title for your recipe..."
                                         defaultValue={newChatTitle}
                                         onChange={(e) => setNewChatTitle(e.target.value)}
                                     />
-                                    <p className={newChatFormInvalid && checkNewChatTitle(newChatTitle) ? 'text-red-600 text-sm tracking-wide italic mt-0.5' : 'hidden'}>Title must have between 3 and 21 characters</p>
+                                    <p className={newChatFormInvalid && checkNewChatTitle(newChatTitle.length) ? 'text-red-600 text-sm tracking-wide italic mt-0.5' : 'hidden'}>Title must have between 3 and 21 characters</p>
                                 </div>
 
                                 <div>
