@@ -124,7 +124,7 @@ export default function MainPage({ user }: Props) {
 
     // OLD VERSION - NO FRAMER MOTION
     // return (
-    //     <div className="md:overflow-y-hidden flex w-screen h-screen bg-neutral-800 text-white">
+    //     <div className="md:overflow-y-hidden flex w-screen h-screen-withmobile bg-neutral-800 text-white">
     //         <div className={`${mobileChatOpen ? 'hidden' : 'block'} w-screen md:w-[20vw] md:block`}>
     //             <Sidebar
     //                 user={user}

@@ -6,6 +6,12 @@
     .h-screen-withmobile {
         @apply h-screen h-[100dvh] lg:h-screen
     }
+    .max-h-screen-withmobile {
+        @apply max-h-screen max-h-[100dvh] lg:max-h-screen
+    }
+    .min-h-screen-withmobile {
+        @apply min-h-screen min-h-[100dvh] lg:min-h-screen
+    }
 
     .btn-primary {
         @apply rounded-md border border-transparent drop-shadow-sm shadow-sm bg-blue-600 py-2 px-5 text-center font-medium text-white tracking-wide shadow-sm hover:bg-indigo-700 focus:bg-indigo-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition duration-300 ease-out

@@ -24,7 +24,7 @@ export default function PopupCustom({ modal, setModal, confirmHandler, titleText
                 initialFocus={cancelButtonRef}
                 onClose={setModal}
             >
-                <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+                <div className="flex items-end justify-center min-h-screen-withmobile pt-4 px-4 pb-20 text-center sm:block sm:p-0">
                     <Transition.Child
                         as={Fragment}
                         enter="ease-out duration-300"
@@ -39,7 +39,7 @@ export default function PopupCustom({ modal, setModal, confirmHandler, titleText
 
                     {/* This element is to trick the browser into centering the modal contents. */}
                     <span
-                        className="hidden sm:inline-block sm:align-middle sm:h-screen"
+                        className="hidden sm:inline-block sm:align-middle h-screen-withmobile"
                         aria-hidden="true"
                     >
                     &#8203;

@@ -174,7 +174,7 @@ export default function Sidebar({ user, selectedChatroomId, setSelectedChatroomI
                     className="fixed inset-0 z-50 overflow-y-auto bg-black bg-opacity-50 backdrop-blur-sm"
                     onClose={closeNewChatPopup}
                 >
-                    <div className="min-h-screen px-4 text-center">
+                    <div className="min-h-screen-withmobile px-4 text-center">
                         <Transition.Child
                             as={Fragment}
                             enter="ease-out duration-300"
@@ -188,7 +188,7 @@ export default function Sidebar({ user, selectedChatroomId, setSelectedChatroomI
                         </Transition.Child>
 
                         <span
-                            className="inline-block h-screen align-middle"
+                            className="inline-block h-screen-withmobile align-middle"
                             aria-hidden="true"
                         >
                           &#8203;

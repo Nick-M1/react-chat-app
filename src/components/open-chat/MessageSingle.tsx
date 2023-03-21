@@ -71,7 +71,7 @@ export default function MessageSingle({ message, user }: Props) {
                     className="fixed inset-0 z-10 overflow-y-auto"
                     onClose={closeModal}
                 >
-                    <div className="min-h-screen px-4 text-center backdrop-blur-sm">
+                    <div className="min-h-screen-withmobile px-4 text-center backdrop-blur-sm">
                         <Transition.Child
                             as={Fragment}
                             enter="ease-out duration-300"
@@ -84,7 +84,7 @@ export default function MessageSingle({ message, user }: Props) {
                             <Dialog.Overlay className="fixed inset-0" />
                         </Transition.Child>
                         <span
-                            className="inline-block h-screen align-middle"
+                            className="inline-block h-screen-withmobile align-middle"
                             aria-hidden="true"
                         >
                           &#8203;
