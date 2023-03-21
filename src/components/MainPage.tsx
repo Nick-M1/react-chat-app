@@ -57,7 +57,7 @@ export default function MainPage({ user }: Props) {
     // Animations for framer-motion
     const initialVariants: any = (fromLeft: boolean) => {
         // if (!isMobile) return undefined
-        return { x: fromLeft ? -700 : 700, display: 'block' }
+        return { x: fromLeft ? -700 : 700, display: 'block', height: '100dvh' }
     }
     const animationVariants: any = (show: boolean, fromLeft: boolean) => {
         if (!isMobile)
@@ -67,8 +67,10 @@ export default function MainPage({ user }: Props) {
             x: 0,
             transition: {duration: 0.3},
             display: 'block',
+            height: '100dvh'
         } : {
             x: fromLeft ? -700 : 700,
+            height: '100dvh',
             transition: {duration: 0.3},
             position: 'absolute',
             transitionEnd: {
@@ -83,7 +85,7 @@ export default function MainPage({ user }: Props) {
         <div className="overflow-x-clip flex w-screen h-screen-withmobile bg-neutral-800 text-white">
             <motion.div
                 key="slider-modal"
-                className={`w-screen md:w-[20vw]`}
+                className={`w-screen md:w-[20vw] `}
                 initial={ initialVariants(true) }
                 animate={ animationVariants(!mobileChatOpen, true) }
                 transition={{ type: "just" }}
@@ -97,7 +99,7 @@ export default function MainPage({ user }: Props) {
 
             <motion.div
                 key="mainchat-modal"
-                className={`w-screen md:w-[80vw]`}
+                className={`w-screen md:w-[80vw] overflow-x-clip`}
                 initial={ initialVariants(false) }
                 animate={ animationVariants(mobileChatOpen, false) }
                 transition={{ type: "just" }}
