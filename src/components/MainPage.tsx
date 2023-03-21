@@ -20,23 +20,39 @@ export default function MainPage({ user }: Props) {
     useEffect(() => { if (!mobileChatOpen) setSelectedChatroomId('') }, [mobileChatOpen])
 
 
-    const [ssss, setssss] = useState('')
-
     // Back button on mobile
     useEffect(() => {
-        function handleKeyDown(e: globalThis.KeyboardEvent) {
-            setssss(e.key)
-            // if (isMobile && e.key == 'Backspace')
-            //     setMobileChatOpen(false)
+        function onBackButtonEvent(e: PopStateEvent) {
+            if (!mobileChatOpen) {
+                setMobileChatOpen(false)
+                e.preventDefault()
+                history.go(1);
+            }
         }
 
-        document.addEventListener('keydown', handleKeyDown);
-
-        // clean up
-        return function cleanup() {
-            document.removeEventListener('keydown', handleKeyDown);
-        }
+        window.history.pushState(null, '', window.location.pathname);
+        window.addEventListener('popstate', onBackButtonEvent);
+        return () => {
+            window.removeEventListener('popstate', onBackButtonEvent);
+        };
     }, []);
+
+
+    // // Back button on mobile
+    // useEffect(() => {
+    //     function handleKeyDown(e: any) {
+    //         setssss(e.key)
+    //         // if (isMobile && e.key == 'Backspace')
+    //         //     setMobileChatOpen(false)
+    //     }
+    //
+    //     document.addEventListener('', handleKeyDown);
+    //
+    //     // clean up
+    //     return function cleanup() {
+    //         document.removeEventListener('keydown', handleKeyDown);
+    //     }
+    // }, []);
 
     // Animations for framer-motion
     const initialVariants: any = (fromLeft: boolean) => {
@@ -65,7 +81,6 @@ export default function MainPage({ user }: Props) {
 
     return (
         <div className="overflow-x-clip flex w-screen h-[100dvh] lg:h-screen bg-neutral-800 text-white">
-
             <motion.div
                 key="slider-modal"
                 className={`w-screen md:w-[20vw]`}
@@ -87,23 +102,22 @@ export default function MainPage({ user }: Props) {
                 animate={ animationVariants(mobileChatOpen, false) }
                 transition={{ type: "just" }}
             >
-                {ssss}
-                {/*{ selectedChatroomId != '' ? (*/}
-                {/*    <div className={`w-full md:ml-auto md:overflow-y-scroll scrollbar `}>*/}
-                {/*        <ChatScreen*/}
-                {/*            user={user}*/}
-                {/*            selectedChatroomId={selectedChatroomId}*/}
-                {/*            selectedChatroom={allChatrooms.find(c => c.id == selectedChatroomId)}*/}
-                {/*            setMobileChatOpen={setMobileChatOpen}*/}
-                {/*        />*/}
-                {/*    </div>*/}
-                {/*) : (*/}
-                {/*    <div className={`hidden md:block w-full m-auto`}>*/}
-                {/*        <h2 className="text-2xl font-semibold text-center">*/}
-                {/*            Click on a chat or create a new chat*/}
-                {/*        </h2>*/}
-                {/*    </div>*/}
-                {/*)}*/}
+                { selectedChatroomId != '' ? (
+                    <div className={`w-full md:ml-auto md:overflow-y-scroll scrollbar `}>
+                        <ChatScreen
+                            user={user}
+                            selectedChatroomId={selectedChatroomId}
+                            selectedChatroom={allChatrooms.find(c => c.id == selectedChatroomId)}
+                            setMobileChatOpen={setMobileChatOpen}
+                        />
+                    </div>
+                ) : (
+                    <div className={`hidden md:block w-full m-auto`}>
+                        <h2 className="text-2xl font-semibold text-center">
+                            Click on a chat or create a new chat
+                        </h2>
+                    </div>
+                )}
             </motion.div>
         </div>
     )
