@@ -20,11 +20,14 @@ export default function MainPage({ user }: Props) {
     useEffect(() => { if (!mobileChatOpen) setSelectedChatroomId('') }, [mobileChatOpen])
 
 
+    const [ssss, setssss] = useState('')
+
     // Back button on mobile
     useEffect(() => {
         function handleKeyDown(e: globalThis.KeyboardEvent) {
-            if (isMobile && e.key == 'Backspace')
-                setMobileChatOpen(false)
+            setssss(e.key)
+            // if (isMobile && e.key == 'Backspace')
+            //     setMobileChatOpen(false)
         }
 
         document.addEventListener('keydown', handleKeyDown);
@@ -62,6 +65,7 @@ export default function MainPage({ user }: Props) {
 
     return (
         <div className="overflow-x-clip flex w-screen h-[100dvh] lg:h-screen bg-neutral-800 text-white">
+
             <motion.div
                 key="slider-modal"
                 className={`w-screen md:w-[20vw]`}
@@ -83,22 +87,23 @@ export default function MainPage({ user }: Props) {
                 animate={ animationVariants(mobileChatOpen, false) }
                 transition={{ type: "just" }}
             >
-                { selectedChatroomId != '' ? (
-                    <div className={`w-full md:ml-auto md:overflow-y-scroll scrollbar `}>
-                        <ChatScreen
-                            user={user}
-                            selectedChatroomId={selectedChatroomId}
-                            selectedChatroom={allChatrooms.find(c => c.id == selectedChatroomId)}
-                            setMobileChatOpen={setMobileChatOpen}
-                        />
-                    </div>
-                ) : (
-                    <div className={`hidden md:block w-full m-auto`}>
-                        <h2 className="text-2xl font-semibold text-center">
-                            Click on a chat or create a new chat
-                        </h2>
-                    </div>
-                )}
+                {ssss}
+                {/*{ selectedChatroomId != '' ? (*/}
+                {/*    <div className={`w-full md:ml-auto md:overflow-y-scroll scrollbar `}>*/}
+                {/*        <ChatScreen*/}
+                {/*            user={user}*/}
+                {/*            selectedChatroomId={selectedChatroomId}*/}
+                {/*            selectedChatroom={allChatrooms.find(c => c.id == selectedChatroomId)}*/}
+                {/*            setMobileChatOpen={setMobileChatOpen}*/}
+                {/*        />*/}
+                {/*    </div>*/}
+                {/*) : (*/}
+                {/*    <div className={`hidden md:block w-full m-auto`}>*/}
+                {/*        <h2 className="text-2xl font-semibold text-center">*/}
+                {/*            Click on a chat or create a new chat*/}
+                {/*        </h2>*/}
+                {/*    </div>*/}
+                {/*)}*/}
             </motion.div>
         </div>
     )
