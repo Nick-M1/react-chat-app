@@ -1,7 +1,7 @@
 import {auth} from "./firebase";
 import {useAuthState} from "react-firebase-hooks/auth";
-import SigninButton from "./components/authentication/SigninButton";
 import MainPage from "./components/MainPage";
+import SigninPage from "./components/authentication/SigninPage";
 
 
 export default function App() {
@@ -10,7 +10,7 @@ export default function App() {
     if (userLoading)
         return <div>Loading</div>
     if (user == null)
-        return <div><SigninButton/></div>
+        return <SigninPage/>
 
     return (
         <MainPage user={user}/>

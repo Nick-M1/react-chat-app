@@ -67,7 +67,7 @@ export default function MainPage({ user }: Props) {
 
     return (
         <div className="overflow-x-clip flex w-screen h-screen-withmobile bg-neutral-800 text-white">
-            <motion.div layout
+            <motion.div
                 key="slider-modal"
                 className={`w-screen md:w-[20vw] `}
                 initial={ initialVariants(true) }
@@ -81,7 +81,7 @@ export default function MainPage({ user }: Props) {
                 />
             </motion.div>
 
-            <motion.div layout
+            <motion.div
                 key="mainchat-modal"
                 className={`w-screen md:w-[80vw] overflow-x-clip`}
                 initial={ initialVariants(false) }
@@ -98,43 +98,14 @@ export default function MainPage({ user }: Props) {
                         />
                     </div>
                 ) : (
-                    <div className={`hidden md:block w-full pt-20 m-auto`}>
-                        <h2 className="text-2xl font-semibold text-center">
-                            Click on a chat or create a new chat
+                    <div className={`hidden md:flex flex-col w-full pt-20 ml-auto items-center`}>
+                        <h2 className="text-3xl font-semibold text-center">
+                            Click on a chat or start a new chat
                         </h2>
+                        <img src='/homepage-gif.gif' alt='' className='md:w-[25vw] h-[25vw] content-center'/>
                     </div>
                 )}
             </motion.div>
         </div>
     )
-
-    // OLD VERSION - NO FRAMER MOTION
-    // return (
-    //     <div className="md:overflow-y-hidden flex w-screen h-screen-withmobile bg-neutral-800 text-white">
-    //         <div className={`${mobileChatOpen ? 'hidden' : 'block'} w-screen md:w-[20vw] md:block`}>
-    //             <Sidebar
-    //                 user={user}
-    //                 selectedChatroomId={selectedChatroomId} setSelectedChatroomId={setSelectedChatroomId}
-    //                 allChatrooms={allChatrooms} setAllChatrooms={setAllChatrooms}
-    //             />
-    //         </div>
-    //
-    //         { selectedChatroomId != '' ? (
-    //             <div className={`${mobileChatOpen ? 'block' : 'hidden'} md:block w-screen md:w-[80vw] md:overflow-y-scroll scrollbar md:ml-auto`}>
-    //                 <ChatScreen
-    //                     user={user}
-    //                     selectedChatroomId={selectedChatroomId}
-    //                     selectedChatroom={allChatrooms.find(c => c.id == selectedChatroomId)}
-    //                     setMobileChatOpen={setMobileChatOpen}
-    //                 />
-    //             </div>
-    //         ) : (
-    //             <div className={`${mobileChatOpen ? 'block' : 'hidden'} md:block w-screen md:w-[80vw] m-auto`}>
-    //                 <h2 className="text-2xl font-semibold text-center">
-    //                     Click on a chat or create a new chat
-    //                 </h2>
-    //             </div>
-    //         )}
-    //     </div>
-    // )
 }

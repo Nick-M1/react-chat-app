@@ -11,7 +11,7 @@ export default function ChatScreenHeader({ selectedChatroom, setMobileChatOpen }
         return <div>ERROR</div>
 
     return (
-        <div className="sticky top-0 z-30 flex items-center h-20 p-4 border-b border-gray-700">
+        <div className="sticky top-0 z-30 flex items-center h-20 p-4 bg-neutral-800 border-b border-gray-700">
             <ArrowLeftIcon
                 onClick={() => setMobileChatOpen(false)}
                 className="w-6 h-6 mr-2 cursor-pointer md:!hidden focus:outline-none text-gray-50"
