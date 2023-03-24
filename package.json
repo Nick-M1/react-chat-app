@@ -9,7 +9,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@fontsource/montserrat": "^4.5.14",
     "@headlessui/react": "^1.7.13",
     "@heroicons/react": "^2.0.16",
     "dayjs": "^1.11.7",
@@ -17,23 +16,19 @@
     "firebase": "^9.18.0",
     "framer-motion": "^10.6.1",
     "react": "^18.2.0",
-    "react-datepicker": "^4.10.0",
     "react-dom": "^18.2.0",
     "react-firebase-hooks": "^5.1.1",
     "react-hot-toast": "^2.4.0",
     "react-icons": "^4.8.0",
     "react-linkify": "^1.0.0-alpha",
     "react-lodash": "^0.1.2",
-    "react-table": "^7.8.0",
     "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@tailwindcss/forms": "^0.5.3",
     "@types/react": "^18.0.27",
-    "@types/react-datepicker": "^4.10.0",
     "@types/react-dom": "^18.0.10",
     "@types/react-linkify": "^1.0.1",
-    "@types/react-table": "^7.7.14",
     "@types/uuid": "^9.0.1",
     "@vitejs/plugin-react": "^3.1.0",
     "autoprefixer": "^10.4.13",
