@@ -38,22 +38,6 @@ export default function MainPage({ user }: Props) {
     }, []);
 
 
-    // // Back button on mobile
-    // useEffect(() => {
-    //     function handleKeyDown(e: any) {
-    //         setssss(e.key)
-    //         // if (isMobile && e.key == 'Backspace')
-    //         //     setMobileChatOpen(false)
-    //     }
-    //
-    //     document.addEventListener('', handleKeyDown);
-    //
-    //     // clean up
-    //     return function cleanup() {
-    //         document.removeEventListener('keydown', handleKeyDown);
-    //     }
-    // }, []);
-
     // Animations for framer-motion
     const initialVariants: any = (fromLeft: boolean) => {
         // if (!isMobile) return undefined
@@ -83,7 +67,7 @@ export default function MainPage({ user }: Props) {
 
     return (
         <div className="overflow-x-clip flex w-screen h-screen-withmobile bg-neutral-800 text-white">
-            <motion.div
+            <motion.div layout
                 key="slider-modal"
                 className={`w-screen md:w-[20vw] `}
                 initial={ initialVariants(true) }
@@ -97,7 +81,7 @@ export default function MainPage({ user }: Props) {
                 />
             </motion.div>
 
-            <motion.div
+            <motion.div layout
                 key="mainchat-modal"
                 className={`w-screen md:w-[80vw] overflow-x-clip`}
                 initial={ initialVariants(false) }
@@ -114,7 +98,7 @@ export default function MainPage({ user }: Props) {
                         />
                     </div>
                 ) : (
-                    <div className={`hidden md:block w-full m-auto`}>
+                    <div className={`hidden md:block w-full pt-20 m-auto`}>
                         <h2 className="text-2xl font-semibold text-center">
                             Click on a chat or create a new chat
                         </h2>
