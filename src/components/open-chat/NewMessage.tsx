@@ -39,7 +39,8 @@ export default function NewMessage({ user, selectedRoomId }: Props) {
                 displayname: user.displayName,
                 email: user.email,
                 image: user.photoURL
-            } as UserType
+            } as UserType,
+            isDeleted: false,
         } as Message);
 
         await updateDoc(doc(db, 'rooms', selectedRoomId), {

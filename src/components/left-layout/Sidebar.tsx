@@ -202,7 +202,7 @@ export default function Sidebar({ user, selectedChatroomId, setSelectedChatroomI
                             leaveFrom="opacity-100 scale-100"
                             leaveTo="opacity-0 scale-95"
                         >
-                            <div className="inline-block w-full max-w-xl py-6 px-8 my-8 text-left align-middle transition-all transform bg-neutral-800 shadow-xl rounded-xl">
+                            <div className="inline-block w-full max-w-xl py-6 px-8 my-8 text-left align-middle transition-all transform bg-neutral-800 border border-neutral-700 shadow-xl rounded-xl">
                                 <Dialog.Title
                                     as="h3"
                                     className="pb-3 text-2xl leading-6 text-white border-b border-gray-700 text-center"
