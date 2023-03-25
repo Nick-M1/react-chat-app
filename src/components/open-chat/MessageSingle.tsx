@@ -51,7 +51,7 @@ export default function MessageSingle({ message, messageItIsReplyingTo, setMessa
                 style={{ width: "fit-content" }}
                 className={
                     classNames(
-                        'p-4 rounded-lg mx-3 my-2 min-w-[85px] max-w-[75dvw] md:max-w-[65dvw] min-h-[65px] pb-7 relative text-left break-all text-white',
+                        'p-4 rounded-lg mx-3 my-2 min-w-[85px] max-w-[70dvw] md:max-w-[65dvw] min-h-[65px] pb-7 relative text-left break-all text-white',
                         isSender
                             ? "ml-auto group-hover:ml-0 bg-indigo-900 text-left"
                             : "bg-blue-900 text-left",
