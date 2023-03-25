@@ -4,7 +4,9 @@ type Message = {
     text: string
 
     user: UserType
+
     isDeleted: boolean
+    replyToMsgId?: string
 }
 
 type ChatRoom = {

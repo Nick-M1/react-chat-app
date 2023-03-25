@@ -15,9 +15,14 @@ type Props = {
     selectedChatroomId: string
     selectedChatroom: ChatRoom | undefined
     setMobileChatOpen: Dispatch<SetStateAction<boolean>>
+
+    replyToMsgId: string | null
+    setReplyToMsgId: Dispatch<SetStateAction<string | null>>
 }
 
-export default function ChatScreen({ user, selectedChatroomId, selectedChatroom, setMobileChatOpen }: Props) {
+export default function ChatScreen({ user, selectedChatroomId, selectedChatroom, setMobileChatOpen, replyToMsgId, setReplyToMsgId }: Props) {
+
+
     const [messageToDelete, setMessageToDelete] = useState<string | null>(null)
     const [deleteMessagePopup, setDeleteMessagePopup] = useState(false)
     useEffect(() => {
@@ -46,23 +51,12 @@ export default function ChatScreen({ user, selectedChatroomId, selectedChatroom,
     }
 
 
-    // return (
-    //     <div className=''>
-    //         <ChatScreenHeader selectedChatroom={selectedChatroom} setMobileChatOpen={setMobileChatOpen} />
-    //         <div className='w-full h-[80dvh] lg:h-[80vh] px-0.5 md:px-3 overflow-y-scroll scrollbar scroll-smooth flex flex-col-reverse'>
-    //             <div id='end-of-messages'/>
-    //             {messages && messages.map(msg => <MessageSingle key={msg.id} message={msg} user={user} />)}
-    //         </div>
-    //         <NewMessage user={user} selectedRoomId={selectedChatroomId} />
-    //     </div>
-    // )
-
     return (
         <>
             <div className=''>
                 <ChatScreenHeader selectedChatroom={selectedChatroom} setMobileChatOpen={setMobileChatOpen} />
-                <div className='w-full h-[80dvh] lg:h-[80vh] px-0.5 md:px-3 overflow-y-scroll scrollbar scroll-smooth flex flex-col-reverse'>
-                    <div id='end-of-messages'/>
+                <div className='w-full px-0.5 md:px-3 overflow-y-scroll scrollbar scroll-smooth flex flex-col-reverse h-[80dvh] lg:h-[80vh]'>
+                    <div id='end-of-messages' className={replyToMsgId != null ? 'py-8' : ''}></div>
                     <AnimatePresence
                         initial={false}
                         mode='popLayout'
@@ -75,13 +69,27 @@ export default function ChatScreen({ user, selectedChatroomId, selectedChatroom,
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, transition: { duration: 0.15 } }}
                             >
-                                <MessageSingle key={message.id} message={message} user={user} setMessageToDelete={setMessageToDelete} />
+                                <MessageSingle
+                                    key={message.id}
+                                    message={message}
+                                    messageItIsReplyingTo={ typeof message.replyToMsgId != 'undefined' ? messages.find(msg => msg.id === message.replyToMsgId) : undefined}
+                                    user={user}
+                                    setMessageToDelete={setMessageToDelete}
+                                    setReplyToMsgId={setReplyToMsgId}
+
+                                />
                             </motion.div>
                         ))}
                     </AnimatePresence>
-
                 </div>
-                <NewMessage user={user} selectedRoomId={selectedChatroomId} />
+
+                <NewMessage
+                    user={user}
+                    selectedRoomId={selectedChatroomId}
+                    replyToMsgId={replyToMsgId}
+                    setReplyToMsgId={setReplyToMsgId}
+                    replyToMessage={messages.find(msg => msg.id === replyToMsgId)}
+                />
             </div>
 
             <PopupCustom

@@ -12,12 +12,23 @@ type Props = {
 
 export default function MainPage({ user }: Props) {
     const isMobile = window.innerWidth < 768;
+    const [replyToMsgId, setReplyToMsgId] = useState<string | null>(null)
+
     const [selectedChatroomId, setSelectedChatroomId] = useState<string>('')
     const [allChatrooms, setAllChatrooms] = useState<ChatRoom[]>([])
 
     const [mobileChatOpen, setMobileChatOpen] = useState(false)
-    useEffect(() => { if (selectedChatroomId != '') setMobileChatOpen(true) }, [selectedChatroomId])
-    useEffect(() => { if (!mobileChatOpen) setSelectedChatroomId('') }, [mobileChatOpen])
+    useEffect(() => {
+        if (selectedChatroomId != '') {
+            setMobileChatOpen(true)
+            setReplyToMsgId(null)
+        }
+    }, [selectedChatroomId])
+
+    useEffect(() => {
+        if (!mobileChatOpen)
+            setSelectedChatroomId('')
+    }, [mobileChatOpen])
 
 
     // Back button on mobile
@@ -95,6 +106,8 @@ export default function MainPage({ user }: Props) {
                             selectedChatroomId={selectedChatroomId}
                             selectedChatroom={allChatrooms.find(c => c.id == selectedChatroomId)}
                             setMobileChatOpen={setMobileChatOpen}
+                            replyToMsgId={replyToMsgId}
+                            setReplyToMsgId={setReplyToMsgId}
                         />
                     </div>
                 ) : (
