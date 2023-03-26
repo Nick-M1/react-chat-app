@@ -4,7 +4,6 @@ import {User} from "firebase/auth";
 import {Dispatch, SetStateAction, useEffect, useState} from "react";
 import {collection, doc, onSnapshot, query, orderBy, deleteDoc, updateDoc} from "firebase/firestore";
 import {db} from "../../firebase";
-import smoothScroll from "../../utils/smooth-scroll";
 import ChatScreenHeader from "./ChatScreenHeader";
 import {AnimatePresence, motion} from "framer-motion";
 import PopupCustom from "../shared-components/PopupCustom";

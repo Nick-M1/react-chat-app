@@ -1,7 +1,9 @@
 type Message = {
     id: string
     timestamp: any
+
     text: string
+    attachedFileUrl?: string
 
     user: UserType
 

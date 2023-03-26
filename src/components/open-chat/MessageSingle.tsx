@@ -27,14 +27,7 @@ export default function MessageSingle({ message, isJoinedToPreviousMessage, colo
     const isSender = user?.uid == message.user.id
 
     const scrollToReplyOriginal = (otherMessageId: string) => {
-        smoothScroll(otherMessageId, 'nearest')
-
-        const element = document.getElementById(otherMessageId)
-        if (element != null) {
-            const originalClassname = element.className
-            element.className = originalClassname + ' bg-blue-900/50'
-            setTimeout(() => element.className = originalClassname, 1000)
-        }
+        smoothScroll(otherMessageId, 'nearest', true)
     }
 
     return (
@@ -84,7 +77,7 @@ export default function MessageSingle({ message, isJoinedToPreviousMessage, colo
                         <>
                             { message.replyToMsgId != null &&
                                 <div onClick={() => scrollToReplyOriginal(message.replyToMsgId!)}
-                                    className='-mx-2 mb-2 bg-neutral-800/40 hover:bg-neutral-800/60 opacity-90 smooth-transition min-w-[15dvw] max-h-[10dvh] overflow-x-clip overflow-y-clip scrollbar rounded-lg flex cursor-pointer'
+                                    className='-mx-2 mb-2 bg-neutral-800/40 hover:bg-neutral-800/60 opacity-90 smooth-transition min-w-[25dvw] max-h-[10dvh] overflow-x-clip overflow-y-clip scrollbar rounded-lg flex cursor-pointer'
                                 >
                                     <div className={`w-1.5 bg-${colorOfMessageItIsReplyingTo} rounded-lg mr-2 flex-shrink-0`}/>
                                     <div className='p-1 italic text-gray-300 text-sm line-clamp-3'>
@@ -92,6 +85,8 @@ export default function MessageSingle({ message, isJoinedToPreviousMessage, colo
                                         <br/>
                                         { messageItIsReplyingTo?.text }
                                     </div>
+
+                                    { messageItIsReplyingTo?.attachedFileUrl && <img src={messageItIsReplyingTo?.attachedFileUrl} alt='attachment' className='max-h-[10dvh] max-w-[10dvw] ml-auto items-end'/> }
                                 </div>
                             }
 
@@ -101,6 +96,8 @@ export default function MessageSingle({ message, isJoinedToPreviousMessage, colo
                                     <br/>
                                 </>
                             }
+
+                            { message.attachedFileUrl && <img src={message.attachedFileUrl} alt='attachment' className='w-full h-full max-w-[50dvw] max-h-[50dvh] mb-1'/> }
 
                             <Linkify
                                 componentDecorator={(

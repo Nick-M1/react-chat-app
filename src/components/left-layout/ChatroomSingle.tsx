@@ -1,6 +1,5 @@
 import {Dispatch, SetStateAction, useEffect} from "react";
 import dateFormatter from "../../utils/time-formatter";
-import smoothScroll from "../../utils/smooth-scroll";
 
 type Props = {
     chatroom: ChatRoom
