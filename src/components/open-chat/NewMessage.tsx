@@ -22,9 +22,10 @@ type Props = {
     setReplyToMsgId: Dispatch<SetStateAction<string | null>>
 
     replyToMessage: Message | undefined
+    replyToMessageColor: string
 }
 
-export default function NewMessage({ user, selectedRoomId, replyToMsgId, setReplyToMsgId, replyToMessage }: Props) {
+export default function NewMessage({ user, selectedRoomId, replyToMsgId, setReplyToMsgId, replyToMessage, replyToMessageColor }: Props) {
     const [isSending, setIsSending] = useState(false)
     const [formValue, setFormValue] = useState('')
 
@@ -73,12 +74,12 @@ export default function NewMessage({ user, selectedRoomId, replyToMsgId, setRepl
                 <div className='w-full relative'>
                     { replyToMsgId != null &&
                         <div className='absolute bottom-12 bg-neutral-700 w-full h-[10dvh] overflow-y-auto overflow-x-clip scrollbar rounded-lg flex italic'>
-                            <div className='h-full w-1 bg-blue-500 rounded-lg mr-3 flex-shrink-0'/>
+                            <div className={`h-full w-1 bg-${replyToMessageColor} rounded-lg mr-3 flex-shrink-0`}/>
                             <div>
                                 <div onClick={() => setReplyToMsgId(null)} className='absolute right-0 m-1 p-0.5 bg-neutral-600/75 hover:bg-neutral-500/50 active:bg-neutral-500 rounded-full cursor-pointer smooth-transition'>
                                     <XMarkIcon className='w-5 w-5'/>
                                 </div>
-                                <span className='text-blue-500'>{ replyToMessage?.user.displayname }</span>
+                                <span className={`text-${replyToMessageColor}`}>{ replyToMessage?.user.displayname }</span>
                                 <br/>
                                 { replyToMessage?.text }
                             </div>

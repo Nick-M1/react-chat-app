@@ -1,18 +1,16 @@
-import {Dialog, Menu, Transition } from "@headlessui/react";
 import React, {Dispatch, Fragment, SetStateAction, useState} from "react";
 import {User} from "firebase/auth";
 import {EllipsisVerticalIcon, FaceSmileIcon, PencilIcon, TrashIcon} from "@heroicons/react/24/outline";
 import Linkify from 'react-linkify';
 import dateFormatter from "../../utils/time-formatter";
 import {BsReplyFill} from "react-icons/bs";
-import {XMarkIcon} from "@heroicons/react/24/solid";
 import {classNames} from "../../utils/textUtils";
 import smoothScroll from "../../utils/smooth-scroll";
-import colorMapper from "../../utils/user-colors";
 
 
 type Props = {
     message: Message
+    isJoinedToPreviousMessage: boolean
     messageItIsReplyingTo: Message | undefined
 
     colorOfThisMessage: string
@@ -24,7 +22,7 @@ type Props = {
     user: User
 }
 
-export default function MessageSingle({ message, colorOfThisMessage, colorOfMessageItIsReplyingTo, messageItIsReplyingTo, setMessageToDelete, setReplyToMsgId, user }: Props) {
+export default function MessageSingle({ message, isJoinedToPreviousMessage, colorOfThisMessage, colorOfMessageItIsReplyingTo, messageItIsReplyingTo, setMessageToDelete, setReplyToMsgId, user }: Props) {
     const isSender = user?.uid == message.user.id
 
     const scrollToReplyOriginal = (otherMessageId: string) => {
@@ -55,10 +53,11 @@ export default function MessageSingle({ message, colorOfThisMessage, colorOfMess
                 style={{ width: "fit-content" }}
                 className={
                     classNames(
-                        'px-4 pt-2 pb-6 rounded-lg mx-3 my-2 min-w-[85px] max-w-[70dvw] md:max-w-[65dvw] min-h-[65px] relative text-left break-all text-white',
+                        'px-4 pt-2 pb-6 rounded-lg mx-3 min-w-[85px] max-w-[70dvw] md:max-w-[65dvw] min-h-[65px] relative text-left break-all text-white',
                         isSender
                             ? "ml-auto group-hover:ml-0 bg-indigo-900 text-left"
                             : "bg-neutral-700 text-left",
+                        isJoinedToPreviousMessage ? 'mt-0.5' : 'mt-2'
                 )}
             >
                 <div>
@@ -79,7 +78,7 @@ export default function MessageSingle({ message, colorOfThisMessage, colorOfMess
                                 </div>
                             }
 
-                            {!isSender &&
+                            {!isSender && !isJoinedToPreviousMessage &&
                                 <>
                                     <span className={`text-${colorOfThisMessage}`}>{message.user.displayname}</span>
                                     <br/>

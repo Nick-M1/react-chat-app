@@ -55,17 +55,22 @@ export default function ChatScreen({ user, selectedChatroomId, selectedChatroom,
         selectedChatroom?.users.map((user, index) => [user.id, colorMapper(index)])
     )
 
+    // Replies
+    const replyToMessage= messages.find(msg => msg.id === replyToMsgId)
+    const replyToMessageColor = typeof replyToMessage == 'undefined' ? undefined : colorMap.get(replyToMessage.user.id)
+
     return (
         <>
             <div className=''>
                 <ChatScreenHeader selectedChatroom={selectedChatroom} setMobileChatOpen={setMobileChatOpen} />
-                <div className='w-full px-0.5 md:px-3 overflow-y-scroll scrollbar scroll-smooth flex flex-col-reverse h-[80dvh] lg:h-[80vh]'>
+                <div className='w-full py-1 px-0.5 md:px-3 overflow-y-scroll scrollbar scroll-smooth flex flex-col-reverse h-[80dvh] lg:h-[80vh]'>
                     <div id='end-of-messages' className={replyToMsgId != null ? 'py-8' : ''}></div>
                     <AnimatePresence
                         initial={false}
                         mode='popLayout'
                     >
-                        {messages.map(message => {
+                        {messages.map((message, index) => {
+                            const isJoinedToPreviousMessage = index < messages.length-1 && message.user.id == messages[index+1].user.id
                             const messageItIsReplyingTo = typeof message.replyToMsgId != 'undefined' ? messages.find(msg => msg.id === message.replyToMsgId) : undefined
 
                             return (
@@ -79,6 +84,8 @@ export default function ChatScreen({ user, selectedChatroomId, selectedChatroom,
                                     <MessageSingle
                                         key={message.id}
                                         message={message}
+                                        isJoinedToPreviousMessage={isJoinedToPreviousMessage}
+
                                         messageItIsReplyingTo={messageItIsReplyingTo}
 
                                         colorOfThisMessage={colorMap.get(message.user.id) || 'text-indigo-300'}
@@ -100,7 +107,8 @@ export default function ChatScreen({ user, selectedChatroomId, selectedChatroom,
                     selectedRoomId={selectedChatroomId}
                     replyToMsgId={replyToMsgId}
                     setReplyToMsgId={setReplyToMsgId}
-                    replyToMessage={messages.find(msg => msg.id === replyToMsgId)}
+                    replyToMessage={replyToMessage}
+                    replyToMessageColor={replyToMessageColor || 'indigo-300'}
                 />
             </div>
 
