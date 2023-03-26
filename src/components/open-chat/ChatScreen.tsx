@@ -9,6 +9,7 @@ import ChatScreenHeader from "./ChatScreenHeader";
 import {AnimatePresence, motion} from "framer-motion";
 import PopupCustom from "../shared-components/PopupCustom";
 import {TrashIcon} from "@heroicons/react/24/outline";
+import colorMapper from "../../utils/user-colors";
 
 type Props = {
     user: User
@@ -21,7 +22,6 @@ type Props = {
 }
 
 export default function ChatScreen({ user, selectedChatroomId, selectedChatroom, setMobileChatOpen, replyToMsgId, setReplyToMsgId }: Props) {
-
 
     const [messageToDelete, setMessageToDelete] = useState<string | null>(null)
     const [deleteMessagePopup, setDeleteMessagePopup] = useState(false)
@@ -50,6 +50,10 @@ export default function ChatScreen({ user, selectedChatroomId, selectedChatroom,
             )
     }
 
+    // Assign color to each person in room      //todo: USE MEMO
+    const colorMap = new Map(
+        selectedChatroom?.users.map((user, index) => [user.id, colorMapper(index)])
+    )
 
     return (
         <>
@@ -61,25 +65,33 @@ export default function ChatScreen({ user, selectedChatroomId, selectedChatroom,
                         initial={false}
                         mode='popLayout'
                     >
-                        {messages.map(message => (
-                            <motion.div
-                                key={message.id}
-                                className={``}
-                                initial={{ opacity: 0, y: 100 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0, transition: { duration: 0.15 } }}
-                            >
-                                <MessageSingle
-                                    key={message.id}
-                                    message={message}
-                                    messageItIsReplyingTo={ typeof message.replyToMsgId != 'undefined' ? messages.find(msg => msg.id === message.replyToMsgId) : undefined}
-                                    user={user}
-                                    setMessageToDelete={setMessageToDelete}
-                                    setReplyToMsgId={setReplyToMsgId}
+                        {messages.map(message => {
+                            const messageItIsReplyingTo = typeof message.replyToMsgId != 'undefined' ? messages.find(msg => msg.id === message.replyToMsgId) : undefined
 
-                                />
-                            </motion.div>
-                        ))}
+                            return (
+                                <motion.div
+                                    key={message.id}
+                                    className={``}
+                                    initial={{opacity: 0, y: 100}}
+                                    animate={{opacity: 1, y: 0}}
+                                    exit={{opacity: 0, transition: {duration: 0.15}}}
+                                >
+                                    <MessageSingle
+                                        key={message.id}
+                                        message={message}
+                                        messageItIsReplyingTo={messageItIsReplyingTo}
+
+                                        colorOfThisMessage={colorMap.get(message.user.id) || 'text-indigo-300'}
+                                        colorOfMessageItIsReplyingTo={typeof messageItIsReplyingTo != 'undefined' ? colorMap.get(messageItIsReplyingTo.user.id) : undefined}
+
+                                        user={user}
+                                        setMessageToDelete={setMessageToDelete}
+                                        setReplyToMsgId={setReplyToMsgId}
+
+                                    />
+                                </motion.div>
+                            )
+                        })}
                     </AnimatePresence>
                 </div>
 

@@ -8,11 +8,15 @@ import {BsReplyFill} from "react-icons/bs";
 import {XMarkIcon} from "@heroicons/react/24/solid";
 import {classNames} from "../../utils/textUtils";
 import smoothScroll from "../../utils/smooth-scroll";
+import colorMapper from "../../utils/user-colors";
 
 
 type Props = {
     message: Message
     messageItIsReplyingTo: Message | undefined
+
+    colorOfThisMessage: string
+    colorOfMessageItIsReplyingTo: string | undefined
 
     setMessageToDelete: Dispatch<SetStateAction<string | null>>
     setReplyToMsgId: Dispatch<SetStateAction<string | null>>
@@ -20,7 +24,7 @@ type Props = {
     user: User
 }
 
-export default function MessageSingle({ message, messageItIsReplyingTo, setMessageToDelete, setReplyToMsgId, user }: Props) {
+export default function MessageSingle({ message, colorOfThisMessage, colorOfMessageItIsReplyingTo, messageItIsReplyingTo, setMessageToDelete, setReplyToMsgId, user }: Props) {
     const isSender = user?.uid == message.user.id
 
     const scrollToReplyOriginal = (otherMessageId: string) => {
@@ -51,10 +55,10 @@ export default function MessageSingle({ message, messageItIsReplyingTo, setMessa
                 style={{ width: "fit-content" }}
                 className={
                     classNames(
-                        'p-4 rounded-lg mx-3 my-2 min-w-[85px] max-w-[70dvw] md:max-w-[65dvw] min-h-[65px] pb-7 relative text-left break-all text-white',
+                        'px-4 pt-2 pb-6 rounded-lg mx-3 my-2 min-w-[85px] max-w-[70dvw] md:max-w-[65dvw] min-h-[65px] relative text-left break-all text-white',
                         isSender
                             ? "ml-auto group-hover:ml-0 bg-indigo-900 text-left"
-                            : "bg-blue-900 text-left",
+                            : "bg-neutral-700 text-left",
                 )}
             >
                 <div>
@@ -62,26 +66,34 @@ export default function MessageSingle({ message, messageItIsReplyingTo, setMessa
                         <span className='italic text-gray-300'>This message was deleted</span>
                     ) : (
                         <>
-                        { message.replyToMsgId != null &&
-                            <div onClick={() => scrollToReplyOriginal(message.replyToMsgId!)}
-                                className='-mt-1 -mx-1 bg-neutral-700 opacity-90 min-w-[15dvw] max-h-[10dvh] overflow-x-clip overflow-y-clip scrollbar rounded-lg flex cursor-pointer'
-                            >
-                                <div className='h-full w-1 bg-blue-500 rounded-lg mr-3 flex-shrink-0'/>
-                                <div className='p-1 italic text-gray-300 text-sm line-clamp-3'>
-                                    <span className='text-blue-500'>{ messageItIsReplyingTo?.user.displayname }</span>
-                                    <br/>
-                                    { messageItIsReplyingTo?.text }
+                            { message.replyToMsgId != null &&
+                                <div onClick={() => scrollToReplyOriginal(message.replyToMsgId!)}
+                                    className='-mx-2 mb-2 bg-neutral-700 opacity-90 min-w-[15dvw] max-h-[10dvh] overflow-x-clip overflow-y-clip scrollbar rounded-lg flex cursor-pointer'
+                                >
+                                    <div className={`w-1.5 bg-${colorOfMessageItIsReplyingTo} rounded-lg mr-2 flex-shrink-0`}/>
+                                    <div className='p-1 italic text-gray-300 text-sm line-clamp-3'>
+                                        <span className={`text-${colorOfMessageItIsReplyingTo}`}>{ messageItIsReplyingTo?.user.displayname }</span>
+                                        <br/>
+                                        { messageItIsReplyingTo?.text }
+                                    </div>
                                 </div>
-                            </div>
-                        }
+                            }
 
-                        <Linkify>
-                            {message.text}{" "}
-                        </Linkify>
+                            {!isSender &&
+                                <>
+                                    <span className={`text-${colorOfThisMessage}`}>{message.user.displayname}</span>
+                                    <br/>
+                                </>
+                            }
+
+                            <Linkify>
+                                {message.text}{" "}
+                            </Linkify>
+
                         </>
                     ) }
                 </div>
-                <p className="text-gray-400 min-w-[80px] p-2 text-xs absolute bottom-0 text-right right-0 mt-3">
+                <p className="text-gray-400 min-w-[100px] p-2 text-xs absolute bottom-0 text-right right-0">
                     { message.timestamp != null && dateFormatter(message.timestamp.toDate()) }
                 </p>
             </div>
