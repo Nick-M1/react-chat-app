@@ -1,4 +1,4 @@
-import React, {Dispatch, Fragment, SetStateAction, useState} from "react";
+import React, {Dispatch, Fragment, Key, SetStateAction, useState} from "react";
 import {User} from "firebase/auth";
 import {EllipsisVerticalIcon, FaceSmileIcon, PencilIcon, TrashIcon} from "@heroicons/react/24/outline";
 import Linkify from 'react-linkify';
@@ -6,6 +6,7 @@ import dateFormatter from "../../utils/time-formatter";
 import {BsReplyFill} from "react-icons/bs";
 import {classNames} from "../../utils/textUtils";
 import smoothScroll from "../../utils/smooth-scroll";
+import {SecureLink} from "react-secure-link";
 
 
 type Props = {
@@ -27,10 +28,17 @@ export default function MessageSingle({ message, isJoinedToPreviousMessage, colo
 
     const scrollToReplyOriginal = (otherMessageId: string) => {
         smoothScroll(otherMessageId, 'nearest')
+
+        const element = document.getElementById(otherMessageId)
+        if (element != null) {
+            const originalClassname = element.className
+            element.className = originalClassname + ' bg-blue-900/50'
+            setTimeout(() => element.className = originalClassname, 1000)
+        }
     }
 
     return (
-        <div className={`group flex w-full md:min-w-[80px] md:pr-3`} id={message.id}>
+        <div className='group flex w-full md:min-w-[80px] md:pr-3 transition duration-500 ease-out' id={message.id}>
             <div className={`hidden group-hover:flex my-auto smooth-transition ${isSender ? 'ml-auto mr-3' : 'order-last'}`}>
                 { !message.isDeleted && (
                     <>
@@ -62,12 +70,21 @@ export default function MessageSingle({ message, isJoinedToPreviousMessage, colo
             >
                 <div>
                     { message.isDeleted ? (
-                        <span className='italic text-gray-300'>This message was deleted</span>
+                        <>
+                            {!isSender && !isJoinedToPreviousMessage &&
+                                <>
+                                    <span className={`text-${colorOfThisMessage}`}>{message.user.displayname}</span>
+                                    <br/>
+                                </>
+                            }
+                            <span className='italic text-gray-300'>This message was deleted</span>
+
+                        </>
                     ) : (
                         <>
                             { message.replyToMsgId != null &&
                                 <div onClick={() => scrollToReplyOriginal(message.replyToMsgId!)}
-                                    className='-mx-2 mb-2 bg-neutral-700 opacity-90 min-w-[15dvw] max-h-[10dvh] overflow-x-clip overflow-y-clip scrollbar rounded-lg flex cursor-pointer'
+                                    className='-mx-2 mb-2 bg-neutral-800/40 hover:bg-neutral-800/60 opacity-90 smooth-transition min-w-[15dvw] max-h-[10dvh] overflow-x-clip overflow-y-clip scrollbar rounded-lg flex cursor-pointer'
                                 >
                                     <div className={`w-1.5 bg-${colorOfMessageItIsReplyingTo} rounded-lg mr-2 flex-shrink-0`}/>
                                     <div className='p-1 italic text-gray-300 text-sm line-clamp-3'>
@@ -85,7 +102,17 @@ export default function MessageSingle({ message, isJoinedToPreviousMessage, colo
                                 </>
                             }
 
-                            <Linkify>
+                            <Linkify
+                                componentDecorator={(
+                                    decoratedHref: string,
+                                    decoratedText: string,
+                                    key: Key
+                                ) => (
+                                    <SecureLink href={decoratedHref} key={key} className={`underline ${isSender ? 'text-cyan-400 hover:text-indigo-300 active:text-indigo-400' : 'text-blue-400 hover:text-blue-500 active:text-blue-600'}`}>
+                                        {decoratedText}
+                                    </SecureLink>
+                                )}
+                            >
                                 {message.text}{" "}
                             </Linkify>
 

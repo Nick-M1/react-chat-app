@@ -22,10 +22,11 @@
     "react-icons": "^4.8.0",
     "react-linkify": "^1.0.0-alpha",
     "react-lodash": "^0.1.2",
+    "react-secure-link": "^3.1.2",
+    "timeago-react": "^3.0.6",
     "uuid": "^9.0.0"
   },
   "devDependencies": {
-    "@tailwindcss/forms": "^0.5.3",
     "@tailwindcss/line-clamp": "^0.4.2",
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",

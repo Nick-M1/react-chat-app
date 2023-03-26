@@ -1,5 +1,7 @@
 import {ArrowLeftIcon} from "@heroicons/react/24/outline";
 import {Dispatch, SetStateAction} from "react";
+import dateFormatter from "../../utils/time-formatter";
+import TimeAgo from "timeago-react";
 
 type Props = {
     selectedChatroom: ChatRoom | undefined
@@ -29,12 +31,13 @@ export default function ChatScreenHeader({ selectedChatroom, setMobileChatOpen }
                     <p>{selectedChatroom.users[0].displayname}</p>
                 </h3>
                 <p className="text-sm text-gray-100">
-                    Last active: {""}
-                    {/*{recipient?.lastSeen?.toDate() ? (*/}
-                    {/*    <TimeAgo datetime={recipient?.lastSeen?.toDate()} />*/}
-                    {/*) : (*/}
-                    {/*    "Unavailable"*/}
-                    {/*)}*/}
+                    Last active:
+                    { selectedChatroom.timestamp != null &&
+                        <TimeAgo
+                            className='ml-1 italic'
+                            datetime={selectedChatroom.timestamp.toDate()}
+                        />
+                    }
                 </p>
             </div>
         </div>
