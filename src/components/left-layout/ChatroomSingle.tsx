@@ -1,5 +1,5 @@
-import {Dispatch, SetStateAction, useEffect} from "react";
-import dateFormatter from "../../utils/time-formatter";
+import {Dispatch, SetStateAction} from "react";
+import dateFormatter, {DateFormatterOptions} from "../../utils/time-formatter";
 
 type Props = {
     chatroom: ChatRoom
@@ -30,7 +30,7 @@ export default function ChatroomSingle({ chatroom, selectedChatroomId, setSelect
             />
             <div className="ml-5">
                 <p className="">{ chatroom.name }</p>
-                <p className='text-sm text-gray-400'>{ chatroom.users[0].displayname } • { chatroom.timestamp != null && dateFormatter(chatroom.timestamp.toDate()) }</p>
+                <p className='text-sm text-gray-400'>{ chatroom.users[0].displayname } • { chatroom.timestamp != null && dateFormatter(chatroom.timestamp.toDate(), DateFormatterOptions.FULL) }</p>
             </div>
         </div>
     );

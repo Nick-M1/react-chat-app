@@ -7,6 +7,7 @@ import {Dispatch, SetStateAction} from "react";
 type Props = {
     message: Message
     selectedChatroomId: string
+    isSender: boolean
     user: User
 
     setReactionsOpen: Dispatch<SetStateAction<string | null>>
@@ -20,15 +21,14 @@ async function updateReaction(chatroomId: string, messageId: string, userId: str
     )
 }
 
-export default function ReactionPopup({ message, selectedChatroomId, user, setReactionsOpen }: Props) {
+export default function ReactionPopup({ message, selectedChatroomId, user, isSender, setReactionsOpen }: Props) {
     return (
-        <div
-            className={`z-[1] flex gap-1 rounded-full p-[6px] shadow bg-neutral-700 ml-1`}
+        <div className={`absolute z-[1] flex md:gap-x-1 rounded-full shadow bg-neutral-700 ml-1 -translate-y-12 ${isSender ? 'right-0 translate-x-28' : 'left-0 -translate-x-24'}`}
         >
             {REACTIONS.map(({name, icon, gif}, index) => (
                 <div
                     key={name}
-                    className="after:bg-primary relative after:absolute after:left-1/2 after:top-full after:h-[5px] after:w-[5px] after:-translate-x-1/2 after:rounded-full"
+                    className="flex flex-shrink-0 w-7 h-7 md:w-9 md:h-10 items-center content-center justify-center align-middle"
                 >
                     <img
                         onClick={async () => {
@@ -36,7 +36,7 @@ export default function ReactionPopup({ message, selectedChatroomId, user, setRe
                             setReactionsOpen(null)
                         }}
                         title={name}
-                        className={`h-7 w-7 origin-bottom cursor-pointer transition duration-300 hover:scale-[115%]`}
+                        className={`h-6 w-6 md:h-7 md:w-7 cursor-pointer transition duration-300 hover:scale-[115%]`}
                         src={gif}
                         alt=""
                     />

@@ -8,7 +8,7 @@ type Props = {
 
 export default function ReactionStatus({ reactionsCounter, isSender }: Props) {
     return (
-        <div className={`w-fit pl-1.5 mr-20 rounded-full z[1] flex translate-y-1.5 ${isSender ? 'bg-neutral-700' : 'bg-neutral-800/50'}`}>
+        <div className={`w-fit pl-1.5 mr-3 py-0.5 -my-1 rounded-full z[1] flex translate-y-1.5 ${isSender ? 'bg-neutral-700' : 'bg-neutral-800/50'}`}>
             { REACTIONS.map(({name, icon}, index) => (
                 <div key={name} className={`flex ${reactionsCounter[index] == 0 && 'hidden'}`}>
                     <img

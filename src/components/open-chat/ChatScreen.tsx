@@ -70,7 +70,8 @@ export default function ChatScreen({ user, selectedChatroomId, selectedChatroom,
                         mode='popLayout'
                     >
                         {messages.map((message, index) => {
-                            const isJoinedToPreviousMessage = index < messages.length-1 && message.user.id == messages[index+1].user.id
+                            const isJoinedToPreviousMessageByDate = message.timestamp && index < messages.length-1 && message.timestamp.toDate().toDateString() == messages[index+1].timestamp.toDate().toDateString()
+                            const isJoinedToPreviousMessageByUser = index < messages.length-1 && message.user.id == messages[index+1].user.id
                             const messageItIsReplyingTo = typeof message.replyToMsgId != 'undefined' ? messages.find(msg => msg.id === message.replyToMsgId) : undefined
 
                             return (
@@ -85,7 +86,9 @@ export default function ChatScreen({ user, selectedChatroomId, selectedChatroom,
                                         key={message.id}
                                         message={message}
                                         selectedChatroomId={selectedChatroomId}
-                                        isJoinedToPreviousMessage={isJoinedToPreviousMessage}
+
+                                        isJoinedToPreviousMessageByDate={isJoinedToPreviousMessageByDate}
+                                        isJoinedToPreviousMessageByUser={isJoinedToPreviousMessageByUser}
 
                                         messageItIsReplyingTo={messageItIsReplyingTo}
 
