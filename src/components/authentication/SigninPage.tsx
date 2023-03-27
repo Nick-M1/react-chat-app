@@ -8,12 +8,14 @@ export default function SigninPage() {
     const signInWithGoogle = () => {
         signInWithPopup(auth, googleProvider)
             .then(async (result) => {
+
                 const user = result.user;
                 await setDoc(doc(db, "users", user.uid), {
                     id: user.uid,
                     displayname: user.displayName,
                     email: user.email,
-                    image: user.photoURL
+                    image: user.photoURL,
+                    fcmToken: ''
                 } as UserType);
             });
     }

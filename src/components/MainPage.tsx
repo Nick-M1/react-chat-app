@@ -4,7 +4,52 @@ import {User} from "firebase/auth";
 import ChatScreen from "./open-chat/ChatScreen";
 
 import { motion, AnimatePresence } from "framer-motion"
+import {db, messaging} from "../firebase";
+import {doc, setDoc} from "firebase/firestore";
+import {getToken, onMessage} from "firebase/messaging";
 
+
+// // Saves the messaging device token to Cloud Firestore.
+// async function saveMessagingDeviceToken(user: User) {
+//     try {
+//         const currentToken = await getToken(messaging, {vapidKey: 'BMxu7wGeQg-bTFQY0wwdAwjVxN1o1yIzF6TTZsdlAAzwdkBxQpANgGKlEUDG7XsZ8hfltC2KCJ90UJvrMiZtVV4'});
+//         console.log(currentToken)
+//         if (currentToken) {
+//             console.log('Got FCM device token:', currentToken);
+//             // Saving the Device Token to Cloud Firestore.
+//             const tokenRef = doc(db, 'fcmTokens', currentToken);
+//             await setDoc(tokenRef, { uid: user.uid });
+//
+//             // This will fire when a message is received while the app is in the foreground.
+//             // When the app is in the background, firebase-messaging-sw.js will receive the message instead.
+//             onMessage(messaging, (message) => {
+//                 console.log(
+//                     'New foreground notification from Firebase Messaging!',
+//                     message.notification
+//                 );
+//             });
+//         } else {
+//             // Need to request permissions to show notifications.
+//             requestNotificationsPermissions(user);
+//         }
+//     } catch(error) {
+//         console.error('Unable to get messaging token.', error);
+//     }
+// }
+//
+// // Requests permissions to show notifications.
+// async function requestNotificationsPermissions(user: User) {
+//     console.log('Requesting notifications permission...');
+//     const permission = await Notification.requestPermission();
+//
+//     if (permission === 'granted') {
+//         console.log('Notification permission granted.');
+//         // Notification permission granted.
+//         await saveMessagingDeviceToken(user);
+//     } else {
+//         console.log('Unable to get permission to notify.');
+//     }
+// }
 
 type Props = {
     user: User
@@ -73,6 +118,11 @@ export default function MainPage({ user }: Props) {
             }
         }
     }
+
+    // useEffect(() => {
+    //     saveMessagingDeviceToken(user)
+    // }, [])
+
 
 
 

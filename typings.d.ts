@@ -25,4 +25,5 @@ type UserType = {
     displayname: string
     email: string
     image: string
+    fcmToken: string
 }
