@@ -21,7 +21,6 @@
     "react-hot-toast": "^2.4.0",
     "react-icons": "^4.8.0",
     "react-linkify": "^1.0.0-alpha",
-    "react-lodash": "^0.1.2",
     "react-secure-link": "^3.1.2",
     "timeago-react": "^3.0.6",
     "uuid": "^9.0.0"

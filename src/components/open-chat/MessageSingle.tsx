@@ -1,4 +1,4 @@
-import React, {Dispatch, Fragment, Key, SetStateAction, useState} from "react";
+import React, {Dispatch, Fragment, Key, SetStateAction, useEffect, useState} from "react";
 import {User} from "firebase/auth";
 import {EllipsisVerticalIcon, FaceSmileIcon, PencilIcon, TrashIcon} from "@heroicons/react/24/outline";
 import Linkify from 'react-linkify';
@@ -7,10 +7,15 @@ import {BsReplyFill} from "react-icons/bs";
 import {classNames} from "../../utils/textUtils";
 import smoothScroll from "../../utils/smooth-scroll";
 import {SecureLink} from "react-secure-link";
+import ReactionPopup from "./ReactionPopup";
+import {REACTIONS} from "../../utils/reactions";
+import ReactionStatus from "./ReactionStatus";
 
 
 type Props = {
     message: Message
+    selectedChatroomId: string
+
     isJoinedToPreviousMessage: boolean
     messageItIsReplyingTo: Message | undefined
 
@@ -20,15 +25,24 @@ type Props = {
     setMessageToDelete: Dispatch<SetStateAction<string | null>>
     setReplyToMsgId: Dispatch<SetStateAction<string | null>>
 
+    reactionsOpen: string | null
+    setReactionsOpen: Dispatch<SetStateAction<string | null>>
+
     user: User
 }
 
-export default function MessageSingle({ message, isJoinedToPreviousMessage, colorOfThisMessage, colorOfMessageItIsReplyingTo, messageItIsReplyingTo, setMessageToDelete, setReplyToMsgId, user }: Props) {
-    const isSender = user?.uid == message.user.id
+const scrollToReplyOriginal = (otherMessageId: string) => {
+    smoothScroll(otherMessageId, 'nearest', true)
+}
 
-    const scrollToReplyOriginal = (otherMessageId: string) => {
-        smoothScroll(otherMessageId, 'nearest', true)
-    }
+export default function MessageSingle({ message, selectedChatroomId, isJoinedToPreviousMessage, colorOfThisMessage, colorOfMessageItIsReplyingTo, messageItIsReplyingTo, setMessageToDelete, setReplyToMsgId, reactionsOpen, setReactionsOpen, user }: Props) {
+    const isSender = user?.uid == message.user.id
+    const reactionsSelectorShow = reactionsOpen == message.id
+
+    const reactionsCounter = REACTIONS.map(_ => 0)
+    if (message.reactions)          //todo: Remove if
+        Object.values(message.reactions).forEach(r => reactionsCounter[r]++)
+    const reactionsDisplayShow = !message.isDeleted && reactionsCounter.some(p => p != 0)
 
     return (
         <div className='group flex w-full md:min-w-[80px] md:pr-3 transition duration-500 ease-out' id={message.id}>
@@ -36,29 +50,32 @@ export default function MessageSingle({ message, isJoinedToPreviousMessage, colo
                 { !message.isDeleted && (
                     <>
                         { isSender && <TrashIcon
-                            className="w-5 h-5 m-1 cursor-pointer focus:outline-none opacity-70 hover:opacity-100 smooth-transition"
+                            className="my-auto w-5 h-5 m-1 cursor-pointer focus:outline-none opacity-70 hover:opacity-100 smooth-transition"
                             onClick={() => setMessageToDelete(message.id)}
                         />}
                         <BsReplyFill
-                        className="w-5 h-5 m-1 cursor-pointer focus:outline-none opacity-70 hover:opacity-100 smooth-transition"
-                        onClick={() => setReplyToMsgId(message.id)}
+                            className="my-auto w-5 h-5 m-1 cursor-pointer focus:outline-none opacity-70 hover:opacity-100 smooth-transition"
+                            onClick={() => setReplyToMsgId(message.id)}
                         />
                         <FaceSmileIcon
-                        className="w-5 h-5 m-1 cursor-pointer focus:outline-none opacity-70 hover:opacity-100 smooth-transition"
+                            className="my-auto w-5 h-5 m-1 cursor-pointer focus:outline-none opacity-70 hover:opacity-100 smooth-transition"
+                            onClick={() => setReactionsOpen(prevState => prevState != message.id ? message.id : null)}
                         />
+                        { reactionsSelectorShow && <ReactionPopup selectedChatroomId={selectedChatroomId} message={message} user={user} setReactionsOpen={setReactionsOpen}/> }
                     </>
                 )}
-
             </div>
+
             <div
                 style={{ width: "fit-content" }}
                 className={
                     classNames(
-                        'px-4 pt-2 pb-6 rounded-lg mx-3 min-w-[85px] max-w-[70dvw] md:max-w-[65dvw] min-h-[65px] relative text-left break-all text-white',
+                        'px-4 pt-2 rounded-lg mx-3 min-w-[100px] md:min-w-[85px] max-w-[70dvw] md:max-w-[65dvw] min-h-[65px] relative text-left break-all text-white',
                         isSender
                             ? "ml-auto group-hover:ml-0 bg-indigo-900 text-left"
                             : "bg-neutral-700 text-left",
-                        isJoinedToPreviousMessage ? 'mt-0.5' : 'mt-2'
+                        isJoinedToPreviousMessage ? 'mt-0.5' : 'mt-2',
+                        reactionsDisplayShow ? 'pb-3.5' : 'pb-6',
                 )}
             >
                 <div>
@@ -116,9 +133,11 @@ export default function MessageSingle({ message, isJoinedToPreviousMessage, colo
                         </>
                     ) }
                 </div>
-                <p className="text-gray-400 min-w-[100px] p-2 text-xs absolute bottom-0 text-right right-0">
+                <p className="w-full text-gray-400 min-w-[100px] p-2 text-xs absolute bottom-0 text-right right-0">
                     { message.timestamp != null && dateFormatter(message.timestamp.toDate()) }
                 </p>
+
+                { reactionsDisplayShow && <ReactionStatus reactionsCounter={reactionsCounter} isSender={isSender}/> }
             </div>
         </div>
     );

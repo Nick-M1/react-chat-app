@@ -9,6 +9,8 @@ type Message = {
 
     isDeleted: boolean
     replyToMsgId?: string
+
+    reactions: any[]        //todo: make specific
 }
 
 type ChatRoom = {
@@ -26,4 +28,10 @@ type UserType = {
     email: string
     image: string
     fcmToken: string
+}
+
+type Reaction = {
+    name: string
+    icon: string;
+    gif: string;
 }

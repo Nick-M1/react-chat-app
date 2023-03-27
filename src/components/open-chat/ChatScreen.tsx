@@ -21,6 +21,7 @@ type Props = {
 }
 
 export default function ChatScreen({ user, selectedChatroomId, selectedChatroom, setMobileChatOpen, replyToMsgId, setReplyToMsgId }: Props) {
+    const [reactionsOpen, setReactionsOpen] = useState<string | null>(null)
 
     const [messageToDelete, setMessageToDelete] = useState<string | null>(null)
     const [deleteMessagePopup, setDeleteMessagePopup] = useState(false)
@@ -83,6 +84,7 @@ export default function ChatScreen({ user, selectedChatroomId, selectedChatroom,
                                     <MessageSingle
                                         key={message.id}
                                         message={message}
+                                        selectedChatroomId={selectedChatroomId}
                                         isJoinedToPreviousMessage={isJoinedToPreviousMessage}
 
                                         messageItIsReplyingTo={messageItIsReplyingTo}
@@ -94,6 +96,8 @@ export default function ChatScreen({ user, selectedChatroomId, selectedChatroom,
                                         setMessageToDelete={setMessageToDelete}
                                         setReplyToMsgId={setReplyToMsgId}
 
+                                        reactionsOpen={reactionsOpen}
+                                        setReactionsOpen={setReactionsOpen}
                                     />
                                 </motion.div>
                             )

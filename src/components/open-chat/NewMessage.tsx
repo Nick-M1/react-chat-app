@@ -62,7 +62,8 @@ function uploadMessage(selectedRoomId: string, newMessageId: string, user: User,
             } as UserType,
 
             isDeleted: false,
-            replyToMsgId: replyToMsgId
+            replyToMsgId: replyToMsgId,
+            reactions: [],
         } as Message);
 
         await updateDoc(doc(db, 'rooms', selectedRoomId), {
