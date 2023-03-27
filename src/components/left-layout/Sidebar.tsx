@@ -3,7 +3,18 @@ import {Dispatch, Fragment, SetStateAction, useEffect, useState} from "react";
 import {MagnifyingGlassIcon} from "@heroicons/react/24/outline";
 import {XMarkIcon} from "@heroicons/react/24/solid";
 import {User} from "firebase/auth";
-import {collection, doc, getDocs, onSnapshot, query, serverTimestamp, setDoc, where, or} from "firebase/firestore";
+import {
+    collection,
+    doc,
+    getDocs,
+    onSnapshot,
+    query,
+    serverTimestamp,
+    setDoc,
+    where,
+    or,
+    orderBy
+} from "firebase/firestore";
 import {db} from "../../firebase";
 import ChatroomSingle from "./ChatroomSingle";
 import {v4 as uuidv4} from "uuid";
@@ -37,7 +48,9 @@ export default function Sidebar({ user, selectedChatroomId, setSelectedChatroomI
             where('name_lowercase', '<=', chatSearchFilter.toLowerCase() + '\uf8ff'),
         ),
         (docs) => {
-            setAllChatrooms(docs.docs.map(d => d.data() as ChatRoom))
+            setAllChatrooms(
+                docs.docs.map(d => d.data() as ChatRoom)
+                    .sort((chat1, chat2) => chat2.timestamp - chat1.timestamp))
         });
     useEffect(() => { return () => chatroomUnsub() }, [])
 
@@ -53,7 +66,7 @@ export default function Sidebar({ user, selectedChatroomId, setSelectedChatroomI
                     collection(db, 'users'),
                     where('email', '>=', newChatFormvalue),
                     where('email', '<=', newChatFormvalue + '\uf8ff'),
-                    where('email', '!=', user.email)
+                    where('email', '!=', user.email),
                 )
             ).then(r => setNewChatAutocomplete(r.docs.map(d => d.data() as UserType)))
 

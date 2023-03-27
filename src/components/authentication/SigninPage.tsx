@@ -1,12 +1,13 @@
 import { LockClosedIcon } from '@heroicons/react/20/solid'
 import {BsFacebook, BsGoogle} from "react-icons/bs";
-import {signInWithPopup} from "firebase/auth";
-import {auth, db, googleProvider} from "../../firebase";
+import {signInWithPopup, AuthProvider} from "firebase/auth";
+import {auth, db, facebookProvider, googleProvider} from "../../firebase";
 import {doc, setDoc} from "firebase/firestore";
 
 export default function SigninPage() {
-    const signInWithGoogle = () => {
-        signInWithPopup(auth, googleProvider)
+
+    const signInWithProvider = (provider: AuthProvider) => {
+        signInWithPopup(auth, provider)
             .then(async (result) => {
 
                 const user = result.user;
@@ -111,11 +112,11 @@ export default function SigninPage() {
                     </div>
 
                     <div className="grid grid-cols-2 gap-x-4">
-                        <button onClick={() => signInWithGoogle()} className="btn-primary px-0 btn-bouncy flex justify-center bg-blue-500 hover:bg-blue-700 focus:ring-blue-700">
+                        <button onClick={() => signInWithProvider(googleProvider)} className="btn-primary px-0 btn-bouncy flex justify-center bg-blue-500 hover:bg-blue-700 focus:ring-blue-700">
                             <BsGoogle size={18} className="mr-2 mt-0.5" />
                             <span className="sr-only">Continue with</span> Google
                         </button>
-                        <button className="bg-black hover:bg-gray-700 flex justify-center btn-bouncy btn-primary px-0 hover:ring-slate-700 focus:ring-slate-700 border border-gray-700">
+                        <button onClick={() => signInWithProvider(facebookProvider)} className="bg-black hover:bg-gray-700 flex justify-center btn-bouncy btn-primary px-0 hover:ring-slate-700 focus:ring-slate-700 border border-gray-700">
                             <BsFacebook size={23} className="mr-2" />
                             <span className="sr-only">Continue with</span> Facebook
                         </button>

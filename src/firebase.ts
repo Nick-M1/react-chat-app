@@ -1,9 +1,9 @@
 import { getApp, getApps, initializeApp } from 'firebase/app'
 import { getFirestore } from 'firebase/firestore'
 import { getStorage } from "@firebase/storage";
-
-import { getAuth, GoogleAuthProvider  } from "firebase/auth";
+import { getAuth, GoogleAuthProvider, FacebookAuthProvider  } from "firebase/auth";
 import {getMessaging} from "firebase/messaging/sw";
+
 
 const firebaseConfig = {
     apiKey: import.meta.env.VITE_FIREBASE_CONFIG_APPIKEY,
@@ -22,5 +22,6 @@ const messaging = getMessaging(firebaseApp);
 const auth = getAuth(firebaseApp)
 
 const googleProvider = new GoogleAuthProvider()
+const facebookProvider = new FacebookAuthProvider()
 
-export {firebaseConfig, db, storage, messaging, auth, googleProvider}
+export {firebaseConfig, db, storage, messaging, auth, googleProvider, facebookProvider}

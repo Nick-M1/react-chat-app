@@ -13,7 +13,6 @@ import {getToken, onMessage} from "firebase/messaging";
 // async function saveMessagingDeviceToken(user: User) {
 //     try {
 //         const currentToken = await getToken(messaging, {vapidKey: 'BMxu7wGeQg-bTFQY0wwdAwjVxN1o1yIzF6TTZsdlAAzwdkBxQpANgGKlEUDG7XsZ8hfltC2KCJ90UJvrMiZtVV4'});
-//         console.log(currentToken)
 //         if (currentToken) {
 //             console.log('Got FCM device token:', currentToken);
 //             // Saving the Device Token to Cloud Firestore.
