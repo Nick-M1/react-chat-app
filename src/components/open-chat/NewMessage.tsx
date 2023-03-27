@@ -116,13 +116,12 @@ export default function NewMessage({ user, selectedRoomId, replyToMsgId, setRepl
                         }}
                     />
                     <AddimageIcon className='w-8 h-8 shrink-0 fill-blue-100 hover:fill-blue-200 focus:fill-blue-300 cursor-pointer smooth-transition'/>
-
                 </div>
 
 
                 <PaperclipIcon className='w-7 h-7 shrink-0 fill-blue-100 hover:fill-blue-200 focus:fill-blue-300 cursor-pointer smooth-transition'/>
-                <StickerIcon className='w-7 h-7 shrink-0 fill-blue-100 hover:fill-blue-200 focus:fill-blue-300 cursor-pointer smooth-transition'/>
-                <GifIcon className='w-7 h-7 shrink-0 fill-blue-100 hover:fill-blue-200 focus:fill-blue-300 cursor-pointer smooth-transition'/>
+                <StickerIcon className='hidden md:block w-7 h-7 shrink-0 fill-blue-100 hover:fill-blue-200 focus:fill-blue-300 cursor-pointer smooth-transition'/>
+                <GifIcon className='hidden md:block w-7 h-7 shrink-0 fill-blue-100 hover:fill-blue-200 focus:fill-blue-300 cursor-pointer smooth-transition'/>
                 <div className='w-full relative'>
                     { formValueFile &&
                         <div className={`absolute border-2 border-blue-500 rounded-md overflow-hidden z-10 bottom-12 ${replyToMsgId != null && 'mb-[4.5rem]'}`}>
