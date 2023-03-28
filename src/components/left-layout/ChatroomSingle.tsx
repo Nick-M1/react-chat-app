@@ -12,7 +12,6 @@ type Props = {
 
 export default function ChatroomSingle({ chatroom, storeTimestamp, selectedChatroomId, setSelectedChatroomId }: Props) {
     const isActive = selectedChatroomId == chatroom.id
-
     const hasNewMessage = chatroom.timestamp && storeTimestamp < chatroom.timestamp.toDate()
 
     // useEffect(() => {
