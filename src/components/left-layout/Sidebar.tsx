@@ -22,6 +22,8 @@ import AutocompleteSelector from "./AutocompleteSelector";
 import UserprofileDropdown from "./UserprofileDropdown";
 import {toastOptionsCustom} from "../../utils/toast-options-custom";
 import toast from "react-hot-toast";
+import {useStoreChatrooms} from "../../store";
+import {shallow} from "zustand/shallow";
 
 function checkNewChatTitle(newChatTitleLength: number) {
     return newChatTitleLength < 3 || newChatTitleLength > 20
@@ -54,6 +56,15 @@ export default function Sidebar({ user, selectedChatroomId, setSelectedChatroomI
         });
     useEffect(() => { return () => chatroomUnsub() }, [])
 
+    const [chatroomsStore, addNewChatroomStore] = useStoreChatrooms((state) => [state.chatrooms, state.addNewChatroom], shallow )
+    useEffect(() => {
+        allChatrooms
+            .map(c => c.id)
+            .forEach(cId => {
+                if (!chatroomsStore.hasOwnProperty(cId))
+                    addNewChatroomStore(cId)
+            })
+    }, [allChatrooms])
 
 
     // FOR NEW CHAT POPUP
@@ -165,7 +176,13 @@ export default function Sidebar({ user, selectedChatroomId, setSelectedChatroomI
 
                     <div className="w-full max-h-[65dvh] lg:max-h-[65vh] overflow-y-scroll scrollbar smooth-transition">
                         { allChatrooms.map((chat) => (
-                            <ChatroomSingle key={chat.id} chatroom={chat} selectedChatroomId={selectedChatroomId} setSelectedChatroomId={setSelectedChatroomId} />
+                            <ChatroomSingle
+                                key={chat.id}
+                                chatroom={chat}
+                                hasNewMessage={chat.timestamp && chatroomsStore[chat.id] < chat.timestamp.toDate()}
+                                selectedChatroomId={selectedChatroomId}
+                                setSelectedChatroomId={setSelectedChatroomId}
+                            />
                         ))}
                     </div>
                 </div>

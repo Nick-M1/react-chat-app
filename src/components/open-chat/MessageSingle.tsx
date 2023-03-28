@@ -85,7 +85,7 @@ export default function MessageSingle({ message, selectedChatroomId, isJoinedToP
                                 ? "ml-auto group-hover:ml-0 bg-indigo-900 text-left"
                                 : "bg-neutral-700 text-left",
                             isJoinedToPreviousMessageByUser ? 'mt-0.5' : 'mt-2',
-                            reactionsDisplayShow ? 'pb-3.5' : 'pb-2.5',
+                            reactionsDisplayShow ? 'pb-2.5' : 'pb-2.5',
                     )}
                 >
                     <div>

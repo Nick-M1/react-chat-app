@@ -15,6 +15,8 @@ import {XMarkIcon} from "@heroicons/react/24/solid";
 
 import data from '@emoji-mart/data'
 import Picker from '@emoji-mart/react'
+import {useStoreChatrooms} from "../../store";
+import {shallow} from "zustand/shallow";
 
 
 type Props = {
@@ -86,6 +88,7 @@ export default function NewMessage({ user, selectedRoomId, replyToMsgId, setRepl
 
     const [formValueText, setFormValueText] = useState('')
     const [formValueFile, setFormValueFile] = useState<File | null>(null)
+    const updateChatroomTimestampStore = useStoreChatrooms(state => state.updateChatroomTimestamp, shallow)
 
     const sendMessageHander = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -101,6 +104,7 @@ export default function NewMessage({ user, selectedRoomId, replyToMsgId, setRepl
             ? uploadMessageFunction()
             : uploadFile(newMessageId, formValueFile, uploadMessageFunction)
 
+        updateChatroomTimestampStore(selectedRoomId, Date.now() + 1000)
         setFormValueText('')
         setFormValueFile(null)
         setReplyToMsgId(null)

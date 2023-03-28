@@ -7,6 +7,8 @@ import { motion, AnimatePresence } from "framer-motion"
 import {db, messaging} from "../firebase";
 import {doc, setDoc} from "firebase/firestore";
 import {getToken, onMessage} from "firebase/messaging";
+import {useStoreChatrooms} from "../store";
+import {shallow} from "zustand/shallow";
 
 
 // // Saves the messaging device token to Cloud Firestore.
@@ -61,11 +63,14 @@ export default function MainPage({ user }: Props) {
     const [selectedChatroomId, setSelectedChatroomId] = useState<string>('')
     const [allChatrooms, setAllChatrooms] = useState<ChatRoom[]>([])
 
+
     const [mobileChatOpen, setMobileChatOpen] = useState(false)
+    const updateChatroomTimestampStore = useStoreChatrooms((state) => state.updateChatroomTimestamp, shallow)
     useEffect(() => {
         if (selectedChatroomId != '') {
-            setMobileChatOpen(true)
+            setMobileChatOpen(true)         //todo: setEmojIPicker to false
             setReplyToMsgId(null)
+            updateChatroomTimestampStore(selectedChatroomId, Date.now())
         }
     }, [selectedChatroomId])
 

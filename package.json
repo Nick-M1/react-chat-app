@@ -13,7 +13,6 @@
     "@emoji-mart/react": "^1.1.1",
     "@headlessui/react": "^1.7.13",
     "@heroicons/react": "^2.0.16",
-    "dayjs": "^1.11.7",
     "dotenv": "^16.0.3",
     "emoji-mart": "^5.5.2",
     "firebase": "^9.18.0",
@@ -26,7 +25,8 @@
     "react-linkify": "^1.0.0-alpha",
     "react-secure-link": "^3.1.2",
     "timeago-react": "^3.0.6",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.0",
+    "zustand": "^4.3.6"
   },
   "devDependencies": {
     "@tailwindcss/line-clamp": "^0.4.2",
