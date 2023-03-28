@@ -185,7 +185,7 @@ export default function NewMessage({ user, selectedRoomId, replyToMsgId, setRepl
                     </div>
 
                     <div onClick={() => setOpenEmojiPicker(prevState => !prevState)}>
-                        <EmojiIcon className='absolute text-white right-20 bottom-1 w-8 h-8 fill-blue-100 hover:fill-blue-200 focus:fill-blue-300 cursor-pointer smooth-transition'/>
+                        <EmojiIcon className='absolute text-white right-[5.3rem] bottom-1 w-8 h-8 fill-blue-100 hover:fill-blue-200 focus:fill-blue-300 cursor-pointer smooth-transition'/>
                     </div>
                     <button type='submit' className='ml-0.5 btn-secondary py-2 px-3'>
                         <PaperAirplaneIcon className='w-5 h-5'/>
