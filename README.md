@@ -13,6 +13,7 @@ https://react-chat-app-rosy-omega.vercel.app/
 1. Sign-in Page for users to authenticate with Firebase Auth.
 2. Search for other users and create new chatrooms / groupchats.
 3. Within a chatroom, users can send messages and images/gifs, as well as reply to messages and post emoji reactions.
+4. Users are notified when they receive a new message and can see unread messages from a chatroom from the sidebar
 
 
 ## 🏗️ Built With:
