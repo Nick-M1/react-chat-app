@@ -1,17 +1,24 @@
-import {Dispatch, SetStateAction} from "react";
+import {Dispatch, SetStateAction, useEffect} from "react";
 import dateFormatter, {DateFormatterOptions} from "../../utils/time-formatter";
+import toast from "react-hot-toast";
 
 type Props = {
     chatroom: ChatRoom
-    hasNewMessage: boolean
+    storeTimestamp: number
 
     selectedChatroomId: string
     setSelectedChatroomId: Dispatch<SetStateAction<string>>
 }
 
-export default function ChatroomSingle({ chatroom, hasNewMessage, selectedChatroomId, setSelectedChatroomId }: Props) {
+export default function ChatroomSingle({ chatroom, storeTimestamp, selectedChatroomId, setSelectedChatroomId }: Props) {
     const isActive = selectedChatroomId == chatroom.id
-    // console.log(chatroom.id, chatroom.timestamp, hasNewMessage)
+
+    const hasNewMessage = chatroom.timestamp && storeTimestamp < chatroom.timestamp.toDate()
+
+    // useEffect(() => {
+    //     if (hasNewMessage && storeTimestamp + 5 > chatroom.timestamp.toDate().getTime()/1000)
+    //         toast(`NEW MESSAGE from chat ${chatroom.name}`, {id: 'new-message'})
+    // })
 
     const enterChatHandler = () => {
         if (!isActive)

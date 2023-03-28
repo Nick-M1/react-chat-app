@@ -179,7 +179,7 @@ export default function Sidebar({ user, selectedChatroomId, setSelectedChatroomI
                             <ChatroomSingle
                                 key={chat.id}
                                 chatroom={chat}
-                                hasNewMessage={chat.timestamp && chatroomsStore[chat.id] < chat.timestamp.toDate()}
+                                storeTimestamp={chatroomsStore[chat.id]}
                                 selectedChatroomId={selectedChatroomId}
                                 setSelectedChatroomId={setSelectedChatroomId}
                             />
