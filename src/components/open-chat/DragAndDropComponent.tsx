@@ -30,7 +30,7 @@ export default function DragAndDropComponent({ setFormValueFile }: Props) {
 
 
     return (
-        <form onDragLeave={handleDrag} onDragOver={handleDrag} className={`hidden md:block absolute inset-0 ${dragActive ? 'bg-neutral-800/70 z-30' : 'bg-none opacity-0'}`}>
+        <form onDragLeave={handleDrag} onDragOver={handleDrag} className={`hidden sm:block absolute inset-0 ${dragActive ? 'bg-neutral-800/70 z-30' : 'bg-none opacity-0'}`}>
             <input type="file" multiple={false} onChange={handleChange} className='w-full h-full opacity-0'/>
             <div className='absolute left-[10%] md:left-[40%] top-[40%] text-3xl'>
                 🖼️ Drag and drop your file here
