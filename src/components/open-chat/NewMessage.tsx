@@ -150,7 +150,7 @@ export default function NewMessage({ user, selectedRoomId, replyToMsgId, setRepl
                 </div>
             )}
             { openEmojiGifPicker == EmojiOrGifPopup.GIF_OPEN && (
-                <div className='hidden md:block absolute right-3 bottom-14 border border-gray-700 rounded-lg'>
+                <div className='absolute right-3 bottom-14 border border-gray-700 rounded-lg'>
                     <GifPicker
                         tenorApiKey={import.meta.env.VITE_TENORAPI}
                         theme={Theme.DARK}
@@ -219,8 +219,12 @@ export default function NewMessage({ user, selectedRoomId, replyToMsgId, setRepl
                     </div>
 
                     <div onClick={() => setOpenEmojiGifPicker(prevState => prevState == EmojiOrGifPopup.EMOJI_OPEN ? EmojiOrGifPopup.ALL_CLOSE : EmojiOrGifPopup.EMOJI_OPEN)}>
-                        <EmojiIcon className='absolute text-white right-[5.3rem] bottom-1 w-8 h-8 fill-blue-100 hover:fill-blue-200 focus:fill-blue-300 cursor-pointer smooth-transition'/>
+                        <EmojiIcon className='hidden md:block absolute text-white right-[5.7rem] bottom-1 w-8 h-8 fill-blue-100 hover:fill-blue-200 focus:fill-blue-300 cursor-pointer smooth-transition'/>
                     </div>
+                    <div onClick={() => setOpenEmojiGifPicker(prevState => prevState == EmojiOrGifPopup.GIF_OPEN ? EmojiOrGifPopup.ALL_CLOSE : EmojiOrGifPopup.GIF_OPEN)}>
+                        <GifIcon className='block md:hidden absolute text-white right-[6rem] bottom-[0.6rem] w-7 h-7 shrink-0 fill-blue-100 hover:fill-blue-200 focus:fill-blue-300 cursor-pointer smooth-transition'/>
+                    </div>
+
                     <button type='submit' className='ml-0.5 btn-secondary py-2 px-3'>
                         <PaperAirplaneIcon className='w-5 h-5'/>
                     </button>
