@@ -80,7 +80,7 @@ export default function MessageSingle({ message, selectedChatroomId, isJoinedToP
                     style={{ width: "fit-content" }}
                     className={
                         classNames(
-                            'flex-shrink-0 pl-4 pr-12 pt-2 rounded-lg mx-3 min-w-[100px] md:min-w-[85px] max-w-[70dvw] md:max-w-[65dvw] min-h-[40px] relative text-left break-all text-white',
+                            'flex-shrink-0 px-2 pt-2 rounded-lg mx-3 min-w-[100px] md:min-w-[85px] max-w-[70dvw] md:max-w-[65dvw] min-h-[40px] relative text-left break-all text-white',
                             isSender
                                 ? "ml-auto group-hover:ml-0 bg-indigo-900 text-left"
                                 : "bg-neutral-700 text-left",
@@ -126,19 +126,21 @@ export default function MessageSingle({ message, selectedChatroomId, isJoinedToP
 
                                 { message.attachedFileUrl && <img src={message.attachedFileUrl} alt='attachment' className='w-full h-full max-w-[50dvw] max-h-[50dvh] mb-1'/> }
 
-                                <Linkify
-                                    componentDecorator={(
-                                        decoratedHref: string,
-                                        decoratedText: string,
-                                        key: Key
-                                    ) => (
-                                        <SecureLink href={decoratedHref} key={key} className={`underline ${isSender ? 'text-cyan-400 hover:text-indigo-300 active:text-indigo-400' : 'text-blue-400 hover:text-blue-500 active:text-blue-600'}`}>
-                                            {decoratedText}
-                                        </SecureLink>
-                                    )}
-                                >
-                                    {message.text}{" "}
-                                </Linkify>
+                                <span className='pl-1 pr-6'>
+                                    <Linkify
+                                        componentDecorator={(
+                                            decoratedHref: string,
+                                            decoratedText: string,
+                                            key: Key
+                                        ) => (
+                                            <SecureLink href={decoratedHref} key={key} className={`underline ${isSender ? 'text-cyan-400 hover:text-indigo-300 active:text-indigo-400' : 'text-blue-400 hover:text-blue-500 active:text-blue-600'}`}>
+                                                {decoratedText}
+                                            </SecureLink>
+                                        )}
+                                    >
+                                        {message.text}{" "}
+                                    </Linkify>
+                                </span>
 
                             </>
                         ) }
