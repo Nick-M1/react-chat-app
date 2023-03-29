@@ -6,12 +6,12 @@ type Props = {
     chatroom: ChatRoom
     storeTimestamp: number
 
-    selectedChatroomId: string
-    setSelectedChatroomId: Dispatch<SetStateAction<string>>
+    selectedChatroom: ChatRoom | null
+    setSelectedChatroom: Dispatch<SetStateAction<ChatRoom | null>>
 }
 
-export default function ChatroomSingle({ chatroom, storeTimestamp, selectedChatroomId, setSelectedChatroomId }: Props) {
-    const isActive = selectedChatroomId == chatroom.id
+export default function ChatroomSingle({ chatroom, storeTimestamp, selectedChatroom, setSelectedChatroom }: Props) {
+    const isActive = selectedChatroom?.id == chatroom.id
     const hasNewMessage = chatroom.timestamp && storeTimestamp < chatroom.timestamp.toDate()
 
     // useEffect(() => {
@@ -21,7 +21,7 @@ export default function ChatroomSingle({ chatroom, storeTimestamp, selectedChatr
 
     const enterChatHandler = () => {
         if (!isActive)
-            setSelectedChatroomId(chatroom.id)
+            setSelectedChatroom(chatroom)
     }
 
     return (

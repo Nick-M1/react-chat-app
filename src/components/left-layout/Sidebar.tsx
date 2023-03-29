@@ -31,14 +31,14 @@ function checkNewChatTitle(newChatTitleLength: number) {
 
 type Props = {
     user: User
-    selectedChatroomId: string
-    setSelectedChatroomId: Dispatch<SetStateAction<string>>
+    selectedChatroom: ChatRoom | null
+    setSelectedChatroom: Dispatch<SetStateAction<ChatRoom | null>>
 
     allChatrooms: ChatRoom[]
     setAllChatrooms: Dispatch<SetStateAction<ChatRoom[]>>
 }
 
-export default function Sidebar({ user, selectedChatroomId, setSelectedChatroomId, allChatrooms, setAllChatrooms }: Props) {
+export default function Sidebar({ user, selectedChatroom, setSelectedChatroom, allChatrooms, setAllChatrooms }: Props) {
 
     // FILTER FOR CHATS
     const [chatSearchFilter, setChatSearchFilter] = useState('')
@@ -116,9 +116,7 @@ export default function Sidebar({ user, selectedChatroomId, setSelectedChatroomI
 
 
         const newRoomId = uuidv4()
-
-        const roomsRef = doc(db, "rooms", newRoomId)
-        await setDoc(roomsRef, {
+        const newChatroom: ChatRoom = {
             id: newRoomId,
             timestamp: serverTimestamp(),
             name: newChatTitle,
@@ -131,10 +129,13 @@ export default function Sidebar({ user, selectedChatroomId, setSelectedChatroomI
                 email: user.email,
                 image: user.photoURL
             } as UserType ]
-        } as ChatRoom);
+        };
+
+        const roomsRef = doc(db, "rooms", newRoomId)
+        await setDoc(roomsRef, newChatroom);
 
         toast.success('Chat created successfully', { id: 'new-chatroom' })
-        setSelectedChatroomId(newRoomId)
+        setSelectedChatroom(newChatroom)
         closeNewChatPopup()
     }
 
@@ -180,8 +181,8 @@ export default function Sidebar({ user, selectedChatroomId, setSelectedChatroomI
                                 key={chat.id}
                                 chatroom={chat}
                                 storeTimestamp={chatroomsStore[chat.id]}
-                                selectedChatroomId={selectedChatroomId}
-                                setSelectedChatroomId={setSelectedChatroomId}
+                                selectedChatroom={selectedChatroom}
+                                setSelectedChatroom={setSelectedChatroom}
                             />
                         ))}
                     </div>

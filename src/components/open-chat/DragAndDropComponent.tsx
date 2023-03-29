@@ -1,40 +1,68 @@
-import {Dispatch, SetStateAction, useState} from "react";
+import {Dispatch, SetStateAction, useEffect, useState} from "react";
 
 type Props = {
     setFormValueFile: Dispatch<SetStateAction<string | File | null>>
 }
 
 export default function DragAndDropComponent({ setFormValueFile }: Props) {
-    const [dragActive, setDragActive] = useState(false);
+    const [fileDragging, setFileDragging] = useState(false);
 
-    // Detect if dragging
-    const handleDrag = function (event: React.DragEvent<HTMLFormElement | HTMLDivElement>) {
-        event.preventDefault();
-        event.stopPropagation();
+    useEffect(() => {
+        const dragBlurHandler = (e: any) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setFileDragging(false);
+        };
 
-        if (event.type === "dragover")
-            setDragActive(true);
-        else if (event.type === "dragleave")
-            setDragActive(false);
-    };
+        const dragFocusHandler = (e: any) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setFileDragging(true);
+        };
 
-    // triggers when file is selected with click
-    const handleChange = function(e: React.ChangeEvent<HTMLInputElement>) {
-        e.preventDefault();
-        if (e.target.files && e.target.files[0].type.split('/')[0] == 'image')
-            setFormValueFile(e.target.files[0])
+        const dropFileHandler = async (e: any) => {
+            e.preventDefault();
+            e.stopPropagation();
 
-        setDragActive(false)
-    };
+            setFileDragging(false);
 
+            let items = e.dataTransfer.items;
+            let files = e.dataTransfer.files;
 
+            let selectedFiles = [];
+
+            for (let i = 0, item; (item = items[i]); ++i) {
+                let entry = item.webkitGetAsEntry();
+                if (entry.isFile) {
+                    selectedFiles.push(files[i]);
+                }
+            }
+
+            for (let i = 0; i < selectedFiles.length; i++) {
+                setFormValueFile(selectedFiles[i]);
+            }
+        };
+
+        addEventListener("dragenter", dragFocusHandler);
+        addEventListener("dragover", dragFocusHandler);
+        addEventListener("dragleave", dragBlurHandler);
+        addEventListener("drop", dropFileHandler);
+
+        return () => {
+            removeEventListener("dragenter", dragFocusHandler);
+            removeEventListener("dragover", dragFocusHandler);
+            removeEventListener("dragleave", dragBlurHandler);
+            removeEventListener("drop", dropFileHandler);
+        };
+    }, []);
 
     return (
-        <form onDragLeave={handleDrag} onDragOver={handleDrag} className={`absolute inset-0 ${dragActive ? 'bg-neutral-800/70 z-30' : 'bg-none opacity-0'}`}>
-            { dragActive &&  <input type="file" multiple={false} onChange={handleChange} className='w-full h-full opacity-0'/> }
-            <div className='absolute left-[10%] md:left-[40%] top-[40%] text-3xl'>
-                🖼️ Drag and drop your file here
+        fileDragging ? (
+            <div className="pointer-events-none fixed top-0 left-0 z-30 flex h-full w-full select-none items-center justify-center backdrop-blur-sm">
+                <h1 className="text-3xl">Drop file to send</h1>
             </div>
-        </form>
-    );
+        ) : (
+            <></>
+        )
+    )
 };

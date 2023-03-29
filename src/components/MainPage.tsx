@@ -60,23 +60,23 @@ export default function MainPage({ user }: Props) {
     const isMobile = window.innerWidth < 768;
     const [replyToMsgId, setReplyToMsgId] = useState<string | null>(null)
 
-    const [selectedChatroomId, setSelectedChatroomId] = useState<string>('')
+    const [selectedChatroom, setSelectedChatroom] = useState<ChatRoom | null>(null)
     const [allChatrooms, setAllChatrooms] = useState<ChatRoom[]>([])
 
 
     const [mobileChatOpen, setMobileChatOpen] = useState(false)
     const updateChatroomTimestampStore = useStoreChatrooms((state) => state.updateChatroomTimestamp, shallow)
     useEffect(() => {
-        if (selectedChatroomId != '') {
+        if (selectedChatroom != null) {
             setMobileChatOpen(true)         //todo: setEmojIPicker to false
             setReplyToMsgId(null)
-            updateChatroomTimestampStore(selectedChatroomId, Date.now())
+            updateChatroomTimestampStore(selectedChatroom.id, Date.now())
         }
-    }, [selectedChatroomId])
+    }, [selectedChatroom])
 
     useEffect(() => {
         if (!mobileChatOpen)
-            setSelectedChatroomId('')
+            setSelectedChatroom(null)
     }, [mobileChatOpen])
 
 
@@ -141,7 +141,7 @@ export default function MainPage({ user }: Props) {
             >
                 <Sidebar
                     user={user}
-                    selectedChatroomId={selectedChatroomId} setSelectedChatroomId={setSelectedChatroomId}
+                    selectedChatroom={selectedChatroom} setSelectedChatroom={setSelectedChatroom}
                     allChatrooms={allChatrooms} setAllChatrooms={setAllChatrooms}
                 />
             </motion.div>
@@ -153,12 +153,11 @@ export default function MainPage({ user }: Props) {
                 animate={ animationVariants(mobileChatOpen, false) }
                 transition={{ type: "just" }}
             >
-                { selectedChatroomId != '' ? (
+                { selectedChatroom != null ? (
                     <div className={`w-full md:ml-auto md:overflow-y-scroll scrollbar `}>
                         <ChatScreen
                             user={user}
-                            selectedChatroomId={selectedChatroomId}
-                            selectedChatroom={allChatrooms.find(c => c.id == selectedChatroomId)}
+                            selectedChatroom={selectedChatroom}
                             setMobileChatOpen={setMobileChatOpen}
                             replyToMsgId={replyToMsgId}
                             setReplyToMsgId={setReplyToMsgId}

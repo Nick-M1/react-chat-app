@@ -106,7 +106,7 @@ export default function NewMessage({ user, selectedRoomId, replyToMsgId, setRepl
         if (isSending)
             return
 
-        if (formValueText == '') {
+        if (formValueText == '' && formValueFile == null) {
             toast.error('Message must not be empty', { ...toastOptionsCustom, id: 'new-message'})
             return
         }

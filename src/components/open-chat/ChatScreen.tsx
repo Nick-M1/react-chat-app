@@ -12,15 +12,14 @@ import colorMapper from "../../utils/user-colors";
 
 type Props = {
     user: User
-    selectedChatroomId: string
-    selectedChatroom: ChatRoom | undefined
+    selectedChatroom: ChatRoom
     setMobileChatOpen: Dispatch<SetStateAction<boolean>>
 
     replyToMsgId: string | null
     setReplyToMsgId: Dispatch<SetStateAction<string | null>>
 }
 
-export default function ChatScreen({ user, selectedChatroomId, selectedChatroom, setMobileChatOpen, replyToMsgId, setReplyToMsgId }: Props) {
+export default function ChatScreen({ user, selectedChatroom, setMobileChatOpen, replyToMsgId, setReplyToMsgId }: Props) {
     const [reactionsOpen, setReactionsOpen] = useState<string | null>(null)
 
     const [messageToDelete, setMessageToDelete] = useState<string | null>(null)
@@ -33,7 +32,7 @@ export default function ChatScreen({ user, selectedChatroomId, selectedChatroom,
     const [messages, setMessages] = useState<Message[]>([])
     const messagesUnsub = onSnapshot(
         query(
-            collection(db, "rooms", selectedChatroomId, "messages"),
+            collection(db, "rooms", selectedChatroom.id, "messages"),
             orderBy('timestamp', 'desc')
         ),
         (doc) => {
@@ -45,7 +44,7 @@ export default function ChatScreen({ user, selectedChatroomId, selectedChatroom,
     const deleteMessageHandler = async() => {
         if (messageToDelete != null)
             await updateDoc(
-                doc(db, "rooms", selectedChatroomId, "messages", messageToDelete),
+                doc(db, "rooms", selectedChatroom.id, "messages", messageToDelete),
                 { isDeleted: true }
             )
     }
@@ -85,7 +84,7 @@ export default function ChatScreen({ user, selectedChatroomId, selectedChatroom,
                                     <MessageSingle
                                         key={message.id}
                                         message={message}
-                                        selectedChatroomId={selectedChatroomId}
+                                        selectedChatroomId={selectedChatroom.id}
 
                                         isJoinedToPreviousMessageByDate={isJoinedToPreviousMessageByDate}
                                         isJoinedToPreviousMessageByUser={isJoinedToPreviousMessageByUser}
@@ -110,7 +109,7 @@ export default function ChatScreen({ user, selectedChatroomId, selectedChatroom,
 
                 <NewMessage
                     user={user}
-                    selectedRoomId={selectedChatroomId}
+                    selectedRoomId={selectedChatroom.id}
                     replyToMsgId={replyToMsgId}
                     setReplyToMsgId={setReplyToMsgId}
                     replyToMessage={replyToMessage}
