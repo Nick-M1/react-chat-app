@@ -211,6 +211,7 @@ export default function NewMessage({ user, selectedRoomId, replyToMsgId, setRepl
                         }
 
                         <input
+                            type='text'
                             value={formValueText}
                             placeholder='Enter your comment...'
                             onChange={(e) => setFormValueText(e.target.value)}
