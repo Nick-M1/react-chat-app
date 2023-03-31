@@ -142,11 +142,11 @@ export default function NewMessage({ user, selectedRoomId, replyToMsgId, setRepl
         <>
             <DragAndDropComponent setFormValueFile={setFormValueFile}/>
             {/*<Suspense fallback={<></>}>*/}
-                <EmojiPickerComponent
-                    show={openEmojiGifPicker == EmojiOrGifPopup.EMOJI_OPEN}
-                    className='hidden md:block absolute right-3 bottom-14 border border-gray-700 rounded-lg'
-                    setState={emojiPickerOnClick}
-                />
+            {/*    <EmojiPickerComponent*/}
+            {/*        show={openEmojiGifPicker == EmojiOrGifPopup.EMOJI_OPEN}*/}
+            {/*        className='hidden md:block absolute right-3 bottom-14 border border-gray-700 rounded-lg'*/}
+            {/*        setState={emojiPickerOnClick}*/}
+            {/*    />*/}
             {/*</Suspense>*/}
 
             { openEmojiGifPicker == EmojiOrGifPopup.GIF_OPEN && (

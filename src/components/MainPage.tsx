@@ -3,10 +3,10 @@ import {KeyboardEvent, useCallback, useEffect, useState} from "react";
 import {User} from "firebase/auth";
 import ChatScreen from "./open-chat/ChatScreen";
 
-import { motion, AnimatePresence } from "framer-motion"
-import {db, messaging} from "../firebase";
-import {doc, setDoc} from "firebase/firestore";
-import {getToken, onMessage} from "firebase/messaging";
+import { motion } from "framer-motion"
+// import {db, messaging} from "../firebase";
+// import {doc, setDoc} from "firebase/firestore";
+// import {getToken, onMessage} from "firebase/messaging";
 import {useStoreChatrooms} from "../store";
 import {shallow} from "zustand/shallow";
 
