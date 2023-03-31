@@ -1,7 +1,7 @@
 import Sidebar from "./left-layout/Sidebar";
-import {KeyboardEvent, useCallback, useEffect, useState} from "react";
+import {KeyboardEvent, lazy, Suspense, useCallback, useEffect, useState} from "react";
 import {User} from "firebase/auth";
-import ChatScreen from "./open-chat/ChatScreen";
+// import ChatScreen from "./open-chat/ChatScreen";
 
 import { motion } from "framer-motion"
 // import {db, messaging} from "../firebase";
@@ -10,6 +10,7 @@ import { motion } from "framer-motion"
 import {useStoreChatrooms} from "../store";
 import {shallow} from "zustand/shallow";
 
+const ChatScreen = lazy(() => import("./open-chat/ChatScreen"))
 
 // // Saves the messaging device token to Cloud Firestore.
 // async function saveMessagingDeviceToken(user: User) {
@@ -154,15 +155,17 @@ export default function MainPage({ user }: Props) {
                 transition={{ type: "just" }}
             >
                 { selectedChatroom != null ? (
-                    <div className={`w-full md:ml-auto md:overflow-y-scroll scrollbar `}>
-                        <ChatScreen
-                            user={user}
-                            selectedChatroom={selectedChatroom}
-                            setMobileChatOpen={setMobileChatOpen}
-                            replyToMsgId={replyToMsgId}
-                            setReplyToMsgId={setReplyToMsgId}
-                        />
-                    </div>
+                    <Suspense fallback={<HomeComponent/>}>
+                        <div className={`w-full md:ml-auto md:overflow-y-scroll scrollbar `}>
+                            <ChatScreen
+                                user={user}
+                                selectedChatroom={selectedChatroom}
+                                setMobileChatOpen={setMobileChatOpen}
+                                replyToMsgId={replyToMsgId}
+                                setReplyToMsgId={setReplyToMsgId}
+                            />
+                        </div>
+                    </Suspense>
                 ) : (
                     <HomeComponent/>
                 )}
