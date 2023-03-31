@@ -1,7 +1,7 @@
 import {auth} from "./firebase";
-import {useAuthState} from "react-firebase-hooks/auth";
 import MainPage from "./components/MainPage";
 import SigninPage from "./components/authentication/SigninPage";
+import useAuthState from "./hooks/useAuthState";
 
 
 export default function App() {

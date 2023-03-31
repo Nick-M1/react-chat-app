@@ -1,25 +1,25 @@
 import {User} from 'firebase/auth';
 import {doc, serverTimestamp, setDoc, updateDoc} from 'firebase/firestore';
-import React, {Dispatch, SetStateAction, useEffect, useState} from "react";
-import {db, storage} from "../../firebase";
+import React, {Dispatch, lazy, SetStateAction, Suspense, useEffect, useState} from "react";
+import {db, storage} from "../../../firebase";
 import {getDownloadURL, ref, uploadBytesResumable} from "@firebase/storage";
 import {v4 as uuidv4} from 'uuid';
-import GifIcon from "../icons/GifIcon";
-import StickerIcon from "../icons/StickerIcon";
+import GifIcon from "../../icons/GifIcon";
+import StickerIcon from "../../icons/StickerIcon";
 import {PaperAirplaneIcon} from "@heroicons/react/24/outline";
-import smoothScroll from "../../utils/smooth-scroll";
-import PaperclipIcon from "../icons/PaperclipIcon";
-import AddimageIcon from "../icons/AddimageIcon";
-import EmojiIcon from "../icons/EmojiIcon";
+import smoothScroll from "../../../utils/smooth-scroll";
+import PaperclipIcon from "../../icons/PaperclipIcon";
+import AddimageIcon from "../../icons/AddimageIcon";
+import EmojiIcon from "../../icons/EmojiIcon";
 import {XMarkIcon} from "@heroicons/react/24/solid";
-import {useStoreChatrooms} from "../../store";
+import {useStoreChatrooms} from "../../../store";
 import {shallow} from "zustand/shallow";
-import data from '@emoji-mart/data'
-import Picker from '@emoji-mart/react'
 import GifPicker, {TenorImage, Theme} from 'gif-picker-react';
 import toast from "react-hot-toast";
-import {toastOptionsCustom} from "../../utils/toast-options-custom";
-import DragAndDropComponent from "./DragAndDropComponent";
+import {toastOptionsCustom} from "../../../utils/toast-options-custom";
+import DragAndDropComponent from "../DragAndDropComponent";
+
+const EmojiPickerComponent = lazy(() => import('./EmojiPickerComponent'))
 
 
 type Props = {
@@ -140,15 +140,14 @@ export default function NewMessage({ user, selectedRoomId, replyToMsgId, setRepl
     return (
         <>
             <DragAndDropComponent setFormValueFile={setFormValueFile}/>
+            <Suspense>
+                <EmojiPickerComponent
+                    show={openEmojiGifPicker == EmojiOrGifPopup.EMOJI_OPEN}
+                    className='hidden md:block absolute right-3 bottom-14 border border-gray-700 rounded-lg'
+                    setState={emojiPickerOnClick}
+                />
+            </Suspense>
 
-            { openEmojiGifPicker == EmojiOrGifPopup.EMOJI_OPEN && (
-                <div className='hidden md:block absolute right-3 bottom-14 border border-gray-700 rounded-lg'>
-                    <Picker
-                        data={data}
-                        onEmojiSelect={emojiPickerOnClick}
-                        theme={'dark'} />
-                </div>
-            )}
             { openEmojiGifPicker == EmojiOrGifPopup.GIF_OPEN && (
                 <div className='absolute right-3 bottom-14 border border-gray-700 rounded-lg'>
                     <GifPicker

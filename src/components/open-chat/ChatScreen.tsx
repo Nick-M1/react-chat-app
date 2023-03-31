@@ -1,5 +1,5 @@
 import MessageSingle from "./MessageSingle";
-import NewMessage from "./NewMessage";
+import NewMessage from "./new-message-input/NewMessage";
 import {User} from "firebase/auth";
 import {Dispatch, SetStateAction, useEffect, useState} from "react";
 import {collection, doc, onSnapshot, query, orderBy, deleteDoc, updateDoc} from "firebase/firestore";
@@ -39,7 +39,6 @@ export default function ChatScreen({ user, selectedChatroom, setMobileChatOpen, 
             ),
             (doc) => {
                 setMessages(doc.docs.map(dc => dc.data() as Message))
-                console.log('NEW DATA')
             });
         return () => messagesUnsub()
     }, [selectedChatroom])
