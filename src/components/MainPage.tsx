@@ -164,14 +164,21 @@ export default function MainPage({ user }: Props) {
                         />
                     </div>
                 ) : (
-                    <div className={`hidden md:flex flex-col w-full pt-20 ml-auto items-center`}>
-                        <h2 className="text-3xl font-semibold text-center">
-                            Click on a chat or start a new chat
-                        </h2>
-                        <img src='/homepage-gif.gif' alt='' className='md:w-[25vw] h-[25vw] content-center'/>
-                    </div>
+                    <HomeComponent/>
                 )}
             </motion.div>
+        </div>
+    )
+}
+
+
+function HomeComponent() {
+    return (
+        <div className={`hidden md:flex flex-col w-full pt-20 ml-auto items-center`}>
+            <h2 className="text-3xl font-semibold text-center">
+                Click on a chat or start a new chat
+            </h2>
+            <img src='/homepage-gif.gif' alt='' className='md:w-[25vw] h-[25vw] content-center'/>
         </div>
     )
 }

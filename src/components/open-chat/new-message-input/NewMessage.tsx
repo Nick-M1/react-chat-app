@@ -18,7 +18,6 @@ import GifPicker, {TenorImage, Theme} from 'gif-picker-react';
 import toast from "react-hot-toast";
 import {toastOptionsCustom} from "../../../utils/toast-options-custom";
 import DragAndDropComponent from "../DragAndDropComponent";
-// import EmojiPickerComponent from './EmojiPickerComponent';
 
 const EmojiPickerComponent = lazy(() => import('./EmojiPickerComponent'))
 
