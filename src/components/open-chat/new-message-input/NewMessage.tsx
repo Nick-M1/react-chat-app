@@ -18,8 +18,9 @@ import GifPicker, {TenorImage, Theme} from 'gif-picker-react';
 import toast from "react-hot-toast";
 import {toastOptionsCustom} from "../../../utils/toast-options-custom";
 import DragAndDropComponent from "../DragAndDropComponent";
+import EmojiPickerComponent from './EmojiPickerComponent';
 
-const EmojiPickerComponent = lazy(() => import('./EmojiPickerComponent'))
+// const EmojiPickerComponent = lazy(() => import('./EmojiPickerComponent'))
 
 
 type Props = {
@@ -140,13 +141,13 @@ export default function NewMessage({ user, selectedRoomId, replyToMsgId, setRepl
     return (
         <>
             <DragAndDropComponent setFormValueFile={setFormValueFile}/>
-            <Suspense fallback={<></>}>
+            {/*<Suspense fallback={<></>}>*/}
                 <EmojiPickerComponent
                     show={openEmojiGifPicker == EmojiOrGifPopup.EMOJI_OPEN}
                     className='hidden md:block absolute right-3 bottom-14 border border-gray-700 rounded-lg'
                     setState={emojiPickerOnClick}
                 />
-            </Suspense>
+            {/*</Suspense>*/}
 
             { openEmojiGifPicker == EmojiOrGifPopup.GIF_OPEN && (
                 <div className='absolute right-3 bottom-14 border border-gray-700 rounded-lg'>
