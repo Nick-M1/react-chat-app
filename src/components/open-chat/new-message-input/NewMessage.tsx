@@ -140,7 +140,7 @@ export default function NewMessage({ user, selectedRoomId, replyToMsgId, setRepl
     return (
         <>
             <DragAndDropComponent setFormValueFile={setFormValueFile}/>
-            <Suspense>
+            <Suspense fallback={<></>}>
                 <EmojiPickerComponent
                     show={openEmojiGifPicker == EmojiOrGifPopup.EMOJI_OPEN}
                     className='hidden md:block absolute right-3 bottom-14 border border-gray-700 rounded-lg'
