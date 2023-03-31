@@ -42,7 +42,7 @@ export default function Sidebar({ user, selectedChatroom, setSelectedChatroom, a
 
     // FILTER FOR CHATS
     const [chatSearchFilter, setChatSearchFilter] = useState('')
-    // useEffect(() => {
+    useEffect(() => {
         const chatroomUnsub = onSnapshot(
             query(
                 collection(db, "rooms"),
@@ -56,8 +56,8 @@ export default function Sidebar({ user, selectedChatroom, setSelectedChatroom, a
                         .sort((chat1, chat2) => chat2.timestamp - chat1.timestamp))
             });
 
-    //     return () => chatroomUnsub()
-    // }, [chatSearchFilter, user])
+        return () => chatroomUnsub()
+    }, [chatSearchFilter, user])
 
 
     const [chatroomsStore, addNewChatroomStore] = useStoreChatrooms((state) => [state.chatrooms, state.addNewChatroom], shallow )

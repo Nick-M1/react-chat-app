@@ -148,7 +148,7 @@ export default function MainPage({ user }: Props) {
 
             <motion.div
                 key="mainchat-modal"
-                className={`w-screen md:w-[80vw] overflow-x-clip`}
+                className={`${selectedChatroom ? 'w-screen' : ''} md:w-[80vw] overflow-x-clip`}
                 initial={ initialVariants(false) }
                 animate={ animationVariants(mobileChatOpen, false) }
                 transition={{ type: "just" }}
