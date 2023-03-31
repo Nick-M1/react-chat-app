@@ -29,16 +29,20 @@ export default function ChatScreen({ user, selectedChatroom, setMobileChatOpen, 
             setDeleteMessagePopup(true)
         }, [messageToDelete])
 
+
     const [messages, setMessages] = useState<Message[]>([])
-    const messagesUnsub = onSnapshot(
-        query(
-            collection(db, "rooms", selectedChatroom.id, "messages"),
-            orderBy('timestamp', 'desc')
-        ),
-        (doc) => {
-            setMessages(doc.docs.map(dc => dc.data() as Message))
-    });
-    useEffect(() => { return () => messagesUnsub() }, [])
+    useEffect(() => {
+        const messagesUnsub = onSnapshot(
+            query(
+                collection(db, "rooms", selectedChatroom.id, "messages"),
+                orderBy('timestamp', 'desc')
+            ),
+            (doc) => {
+                setMessages(doc.docs.map(dc => dc.data() as Message))
+                console.log('NEW DATA')
+            });
+        return () => messagesUnsub()
+    }, [selectedChatroom])
 
 
     const deleteMessageHandler = async() => {

@@ -42,19 +42,22 @@ export default function Sidebar({ user, selectedChatroom, setSelectedChatroom, a
 
     // FILTER FOR CHATS
     const [chatSearchFilter, setChatSearchFilter] = useState('')
-    const chatroomUnsub = onSnapshot(
-        query(
-            collection(db, "rooms"),
-            where('userIds', 'array-contains', user?.uid),
-            where('name_lowercase', '>=', chatSearchFilter.toLowerCase()),
-            where('name_lowercase', '<=', chatSearchFilter.toLowerCase() + '\uf8ff'),
-        ),
-        (docs) => {
-            setAllChatrooms(
-                docs.docs.map(d => d.data() as ChatRoom)
-                    .sort((chat1, chat2) => chat2.timestamp - chat1.timestamp))
-        });
-    useEffect(() => { return () => chatroomUnsub() }, [])
+    useEffect(() => {
+        const chatroomUnsub = onSnapshot(
+            query(
+                collection(db, "rooms"),
+                where('userIds', 'array-contains', user?.uid),
+                where('name_lowercase', '>=', chatSearchFilter.toLowerCase()),
+                where('name_lowercase', '<=', chatSearchFilter.toLowerCase() + '\uf8ff'),
+            ),
+            (docs) => {
+                setAllChatrooms(
+                    docs.docs.map(d => d.data() as ChatRoom)
+                        .sort((chat1, chat2) => chat2.timestamp - chat1.timestamp))
+            });
+
+        return () => chatroomUnsub()
+    }, [chatSearchFilter, user])
 
     const [chatroomsStore, addNewChatroomStore] = useStoreChatrooms((state) => [state.chatrooms, state.addNewChatroom], shallow )
     useEffect(() => {
