@@ -2,7 +2,7 @@ import MessageSingle from "./MessageSingle";
 import NewMessage from "./new-message-input/NewMessage";
 import {User} from "firebase/auth";
 import {Dispatch, SetStateAction, useEffect, useState} from "react";
-import {collection, doc, onSnapshot, query, orderBy, deleteDoc, updateDoc} from "firebase/firestore";
+import {collection, doc, onSnapshot, query, orderBy, limit, updateDoc} from "firebase/firestore";
 import {db} from "../../firebase";
 import ChatScreenHeader from "./ChatScreenHeader";
 import {AnimatePresence, motion} from "framer-motion";
@@ -19,6 +19,8 @@ type Props = {
     setReplyToMsgId: Dispatch<SetStateAction<string | null>>
 }
 
+const INITIAL_MESSAGE_LIMIT = 20
+
 export default function ChatScreen({ user, selectedChatroom, setMobileChatOpen, replyToMsgId, setReplyToMsgId }: Props) {
     const [reactionsOpen, setReactionsOpen] = useState<string | null>(null)
 
@@ -31,17 +33,19 @@ export default function ChatScreen({ user, selectedChatroom, setMobileChatOpen, 
 
 
     const [messages, setMessages] = useState<Message[]>([])
+    const [messagesLimit, setMessagesLimit] = useState(INITIAL_MESSAGE_LIMIT)
     useEffect(() => {
         const messagesUnsub = onSnapshot(
             query(
                 collection(db, "rooms", selectedChatroom.id, "messages"),
-                orderBy('timestamp', 'desc')
+                orderBy('timestamp', 'desc'),
+                limit(messagesLimit)
             ),
             (doc) => {
                 setMessages(doc.docs.map(dc => dc.data() as Message))
             });
         return () => messagesUnsub()
-    }, [selectedChatroom])
+    }, [selectedChatroom, messagesLimit])
 
 
     const deleteMessageHandler = async() => {
@@ -61,11 +65,20 @@ export default function ChatScreen({ user, selectedChatroom, setMobileChatOpen, 
     const replyToMessage= messages.find(msg => msg.id === replyToMsgId)
     const replyToMessageColor = typeof replyToMessage == 'undefined' ? undefined : colorMap.get(replyToMessage.user.id)
 
+
+    const handleScroll = (e: any) => {
+        const atTop = e.target.scrollHeight - e.target.clientHeight <= -Math.ceil(e.target.scrollTop) + 100
+
+        if (atTop)
+            setMessagesLimit(prevState => prevState + 20)
+    }
+
+
     return (
         <>
             <div className=''>
                 <ChatScreenHeader selectedChatroom={selectedChatroom} setMobileChatOpen={setMobileChatOpen} />
-                <div className='w-full py-1 px-0.5 md:px-3 overflow-y-scroll scrollbar scroll-smooth flex flex-col-reverse h-[80dvh] lg:h-[80vh]'>
+                <div onScroll={handleScroll} className='w-full py-1 px-0.5 md:px-3 overflow-y-scroll scrollbar scroll-smooth flex flex-col-reverse h-[80dvh] lg:h-[80vh]'>
                     <div id='end-of-messages' className={replyToMsgId != null ? 'py-8' : ''}></div>
                     <AnimatePresence
                         initial={false}
