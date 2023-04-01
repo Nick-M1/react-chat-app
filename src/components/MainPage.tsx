@@ -9,6 +9,7 @@ import { motion } from "framer-motion"
 // import {getToken, onMessage} from "firebase/messaging";
 import {useStoreChatrooms} from "../store";
 import {shallow} from "zustand/shallow";
+import useWindowSize from "../hooks/useWindowWidth";
 
 const ChatScreen = lazy(() => import("./open-chat/ChatScreen"))
 
@@ -58,11 +59,12 @@ type Props = {
 }
 
 export default function MainPage({ user }: Props) {
-    const isMobile = window.innerWidth < 768;
-    const [replyToMsgId, setReplyToMsgId] = useState<string | null>(null)
+    const windowSize = useWindowSize()
+    const isMobile = windowSize.width < 768;
 
-    const [selectedChatroom, setSelectedChatroom] = useState<ChatRoom | null>(null)
     const [allChatrooms, setAllChatrooms] = useState<ChatRoom[]>([])
+    const [selectedChatroom, setSelectedChatroom] = useState<ChatRoom | null>(null)
+    const [replyToMsgId, setReplyToMsgId] = useState<string | null>(null)
 
 
     const [mobileChatOpen, setMobileChatOpen] = useState(false)

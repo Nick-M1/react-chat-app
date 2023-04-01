@@ -124,8 +124,9 @@ export default function NewMessage({ user, selectedRoomId, replyToMsgId, setRepl
         setFormValueFile(null)
         setReplyToMsgId(null)
         setOpenEmojiGifPicker(EmojiOrGifPopup.ALL_CLOSE)
-        smoothScroll(newMessageId, 'center')
         setIsSending(false)
+
+        setTimeout(() => smoothScroll('end-of-messages', 'end'), 100)
     }
 
 
@@ -160,7 +161,7 @@ export default function NewMessage({ user, selectedRoomId, replyToMsgId, setRepl
 
             <div className='absolute bottom-2 w-full md:w-[78vw] px-4 bg-neutral-800'>
 
-                <form onSubmit={sendMessageHander} className='flex items-center space-x-2'>
+                <form onSubmit={sendMessageHander} className='flex items-center space-x-0.5 md:space-x-1'>
                     <div>
                         <input
                             id="picture"
@@ -172,15 +173,15 @@ export default function NewMessage({ user, selectedRoomId, replyToMsgId, setRepl
                                     setFormValueFile(e.target.files[0])
                             }}
                         />
-                        <AddimageIcon className='w-8 h-8 shrink-0 fill-blue-100 hover:fill-blue-200 focus:fill-blue-300 cursor-pointer smooth-transition'/>
+                        <AddimageIcon className='mr-0.5 w-8 h-8 shrink-0 fill-blue-100 hover:fill-blue-200 focus:fill-blue-300 cursor-pointer smooth-transition'/>
                     </div>
 
 
-                    <PaperclipIcon className='hidden md:block w-7 h-7 shrink-0 fill-blue-100 hover:fill-blue-200 focus:fill-blue-300 cursor-pointer smooth-transition'/>
-                    <StickerIcon className='hidden md:block w-7 h-7 shrink-0 fill-blue-100 hover:fill-blue-200 focus:fill-blue-300 cursor-pointer smooth-transition'/>
+                    <PaperclipIcon className='hidden md:block mx-0.5 w-7 h-7 shrink-0 fill-blue-100 hover:fill-blue-200 focus:fill-blue-300 cursor-pointer smooth-transition'/>
+                    <StickerIcon className='hidden md:block mx-0.5 w-7 h-7 shrink-0 fill-blue-100 hover:fill-blue-200 focus:fill-blue-300 cursor-pointer smooth-transition'/>
 
                     <div onClick={() => setOpenEmojiGifPicker(prevState => prevState == EmojiOrGifPopup.GIF_OPEN ? EmojiOrGifPopup.ALL_CLOSE : EmojiOrGifPopup.GIF_OPEN)}>
-                        <GifIcon className='hidden md:block w-7 h-7 shrink-0 fill-blue-100 hover:fill-blue-200 focus:fill-blue-300 cursor-pointer smooth-transition'/>
+                        <GifIcon className='hidden md:block ml-0.5 mr-1 w-7 h-7 shrink-0 fill-blue-100 hover:fill-blue-200 focus:fill-blue-300 cursor-pointer smooth-transition'/>
                     </div>
 
                     <div className='w-full relative'>
@@ -214,17 +215,17 @@ export default function NewMessage({ user, selectedRoomId, replyToMsgId, setRepl
                             value={formValueText}
                             placeholder='Enter your comment...'
                             onChange={(e) => setFormValueText(e.target.value)}
-                            className='input-primary text-sm px-5'/>
+                            className='input-primary text-sm'/>
                     </div>
 
                     <div onClick={() => setOpenEmojiGifPicker(prevState => prevState == EmojiOrGifPopup.EMOJI_OPEN ? EmojiOrGifPopup.ALL_CLOSE : EmojiOrGifPopup.EMOJI_OPEN)}>
-                        <EmojiIcon className='hidden md:block absolute text-white right-[5.7rem] bottom-1 w-8 h-8 fill-blue-100 hover:fill-blue-200 focus:fill-blue-300 cursor-pointer smooth-transition'/>
+                        <EmojiIcon className='hidden md:block absolute text-white right-[4.9rem] bottom-1 w-8 h-8 fill-blue-100 hover:fill-blue-200 focus:fill-blue-300 cursor-pointer smooth-transition'/>
                     </div>
                     <div onClick={() => setOpenEmojiGifPicker(prevState => prevState == EmojiOrGifPopup.GIF_OPEN ? EmojiOrGifPopup.ALL_CLOSE : EmojiOrGifPopup.GIF_OPEN)}>
-                        <GifIcon className='block md:hidden absolute text-white right-[6rem] bottom-[0.6rem] w-7 h-7 shrink-0 fill-blue-100 hover:fill-blue-200 focus:fill-blue-300 cursor-pointer smooth-transition'/>
+                        <GifIcon className='block md:hidden absolute text-white right-[4.7rem] bottom-[0.6rem] w-7 h-7 shrink-0 fill-blue-100 hover:fill-blue-200 focus:fill-blue-300 cursor-pointer smooth-transition'/>
                     </div>
 
-                    <button type='submit' className='ml-0.5 btn-secondary py-2 px-3'>
+                    <button type='submit' className='btn-secondary py-2 px-3'>
                         <PaperAirplaneIcon className='w-5 h-5'/>
                     </button>
                 </form>
