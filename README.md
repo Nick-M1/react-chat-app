@@ -23,5 +23,5 @@ https://react-chat-app-rosy-omega.vercel.app/
 4. Firebase _(using authentication, cloud firestore and storage)_
 
 
-## 🎬 Demo Videos:
-_Todo..._
+## 🎬 Demo Video:
+https://github.com/Nick-M1/react-chat-app/assets/91367903/1c19e45e-802f-488e-915a-300d9b60bb02
